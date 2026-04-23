@@ -1,0 +1,662 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Scheduler</title>
+<style>
+
+:root {
+–bg: #0f0f11;
+–surface: #1a1a1f;
+–surface2: #22222a;
+–border: #2e2e3a;
+–text: #e8e8f0;
+–muted: #7a7a90;
+–accent: #5b8dee;
+–success: #5bce8a;
+–warn: #e8d45b;
+–danger: #e85b6a;
+}
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, sans-serif; background: var(–bg); color: var(–text); min-height: 100vh; font-size: 14px; }
+
+.app { display: grid; grid-template-columns: 300px 1fr; grid-template-rows: 48px 1fr; height: 100vh; }
+
+/* HEADER */
+header {
+grid-column: 1 / -1;
+background: var(–surface);
+border-bottom: 1px solid var(–border);
+display: flex;
+align-items: center;
+padding: 0 20px;
+}
+.logo { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 14px; letter-spacing: 0.06em; color: var(–accent); }
+.logo span { color: var(–muted); font-weight: 300; }
+
+/* SIDEBAR */
+.sidebar { background: var(–surface); border-right: 1px solid var(–border); display: flex; flex-direction: column; overflow: hidden; }
+.sidebar-section { padding: 13px 14px; border-bottom: 1px solid var(–border); }
+.sidebar-section h3 { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(–muted); margin-bottom: 10px; }
+
+/* FORM */
+.form-row { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+.form-row label { font-size: 10px; color: var(–muted); text-transform: uppercase; letter-spacing: 0.06em; }
+input, select {
+background: var(–bg); border: 1px solid var(–border); color: var(–text);
+padding: 6px 9px; border-radius: 5px; font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, sans-serif; font-size: 13px; width: 100%; transition: border-color 0.15s;
+}
+input:focus, select:focus { outline: none; border-color: var(–accent); }
+input::placeholder { color: var(–muted); }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 8px; }
+.form-row-2 .form-row { margin-bottom: 0; }
+
+.btn { background: var(–accent); color: #fff; border: none; padding: 8px 14px; border-radius: 5px; font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; width: 100%; transition: opacity 0.15s; }
+.btn:hover { opacity: 0.85; }
+.btn-sm { padding: 3px 7px; font-size: 11px; width: auto; border-radius: 4px; }
+.btn-danger { background: var(–danger); }
+.btn-ghost { background: transparent; border: 1px solid var(–border); color: var(–muted); }
+.btn-ghost:hover { border-color: var(–accent); color: var(–accent); opacity: 1; }
+
+/* JOB LIST */
+.job-list { flex: 1; overflow-y: auto; padding: 7px; }
+.job-list::-webkit-scrollbar { width: 3px; }
+.job-list::-webkit-scrollbar-thumb { background: var(–border); border-radius: 2px; }
+
+.job-card { background: var(–surface2); border: 1px solid var(–border); border-radius: 7px; padding: 9px 11px; margin-bottom: 5px; border-left: 3px solid; }
+.job-name { font-weight: 500; font-size: 12px; }
+.job-dept { font-size: 11px; color: var(–muted); margin-top: 1px; }
+.job-meta { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+.badge { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 10px; padding: 2px 5px; border-radius: 3px; background: var(–bg); color: var(–muted); border: 1px solid var(–border); }
+.badge-warn { background: rgba(232,212,91,0.12); color: var(–warn); border-color: rgba(232,212,91,0.3); }
+.badge-danger { background: rgba(232,91,106,0.12); color: var(–danger); border-color: rgba(232,91,106,0.3); }
+.badge-ok { background: rgba(91,206,138,0.12); color: var(–success); border-color: rgba(91,206,138,0.3); }
+.job-actions { display: flex; gap: 4px; margin-top: 7px; align-items: center; }
+.job-due { font-size: 10px; color: var(–muted); margin-right: auto; }
+.edit-panel { display: none; margin-top: 8px; border-top: 1px solid var(–border); padding-top: 8px; }
+.job-view { display: block; }
+.edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; }
+.edit-row input { font-size: 12px; padding: 5px 7px; }
+.edit-lbl { font-size: 10px; color: var(–muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: .05em; }
+.edit-btns { display: flex; gap: 4px; }
+
+/* MAIN */
+.main { display: flex; flex-direction: column; overflow: hidden; }
+
+.cal-controls {
+display: flex; align-items: center; gap: 8px;
+padding: 9px 18px; border-bottom: 1px solid var(–border); background: var(–surface);
+}
+.cal-nav { display: flex; align-items: center; gap: 5px; }
+.cal-nav button {
+background: var(–surface2); border: 1px solid var(–border); color: var(–text);
+width: 26px; height: 26px; border-radius: 5px; cursor: pointer; font-size: 14px;
+display: flex; align-items: center; justify-content: center; transition: border-color 0.15s;
+}
+.cal-nav button:hover { border-color: var(–accent); color: var(–accent); }
+.cal-title { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 13px; font-weight: 500; min-width: 160px; }
+.today-btn { background: var(–surface2); border: 1px solid var(–border); color: var(–muted); padding: 3px 9px; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.15s; }
+.today-btn:hover { border-color: var(–accent); color: var(–accent); }
+.view-toggle { display: flex; gap: 3px; margin-left: auto; }
+.view-btn { padding: 4px 11px; border-radius: 4px; font-size: 12px; background: transparent; border: 1px solid var(–border); color: var(–muted); cursor: pointer; transition: all 0.15s; }
+.view-btn.active { background: var(–accent); border-color: var(–accent); color: #fff; }
+
+/* CAP STRIP */
+.cap-strip { padding: 7px 18px; background: var(–surface); border-bottom: 1px solid var(–border); display: flex; align-items: center; gap: 10px; }
+.cap-label { font-size: 10px; color: var(–muted); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+.cap-track { flex: 1; height: 4px; background: var(–surface2); border-radius: 2px; overflow: hidden; }
+.cap-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+.cap-info { font-size: 11px; color: var(–muted); white-space: nowrap; }
+.cap-info strong { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 11px; }
+
+.cal-wrap { flex: 1; overflow: auto; padding: 12px 16px; }
+.cal-wrap::-webkit-scrollbar { width: 4px; height: 4px; }
+.cal-wrap::-webkit-scrollbar-thumb { background: var(–border); border-radius: 2px; }
+
+/* ── MONTH VIEW ── */
+.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.day-header { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(–muted); text-align: center; padding: 4px 0; }
+.day-cell { background: var(–surface); border: 1px solid var(–border); border-radius: 5px; min-height: 82px; padding: 5px 5px; position: relative; }
+.day-cell.other-month { opacity: 0.3; }
+.day-cell.weekend { background: rgba(255,255,255,0.012); }
+.day-cell.today { border-color: var(–accent); }
+.day-cell.overbooked { border-color: var(–danger) !important; }
+.day-num { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 10px; color: var(–muted); margin-bottom: 4px; line-height: 1; }
+.day-cell.today .day-num { display: inline-flex; align-items: center; justify-content: center; width: 17px; height: 17px; background: var(–accent); color: #fff; border-radius: 50%; font-size: 9px; }
+.day-blocks { display: flex; flex-direction: column; gap: 2px; }
+.block { font-size: 10px; padding: 2px 4px; border-radius: 3px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: rgba(0,0,0,0.82); cursor: default; }
+.block.dl-flag { background: transparent !important; border: 1.5px solid; font-weight: 700; color: inherit; }
+.over-pip { position: absolute; top: 3px; right: 4px; font-size: 8px; font-family: ‘Consolas’, ‘Courier New’, monospace; color: var(–danger); background: rgba(232,91,106,0.15); border: 1px solid rgba(232,91,106,0.3); border-radius: 3px; padding: 1px 3px; }
+
+/* ── WEEK VIEW ── */
+.week-wrap { display: flex; flex-direction: column; height: 100%; }
+.week-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; flex: 1; }
+.week-col { display: flex; flex-direction: column; }
+.week-col-header { text-align: center; padding: 8px 4px; background: var(–surface); border: 1px solid var(–border); border-radius: 5px 5px 0 0; border-bottom: none; }
+.week-col-header .wday { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 10px; text-transform: uppercase; color: var(–muted); letter-spacing: 0.06em; }
+.week-col-header .wdate { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 18px; font-weight: 500; line-height: 1.2; }
+.week-col-header.today-col { border-color: var(–accent); }
+.week-col-header.today-col .wdate { color: var(–accent); }
+.week-col-body {
+flex: 1; background: var(–surface); border: 1px solid var(–border); border-radius: 0 0 5px 5px;
+padding: 8px 6px; display: flex; flex-direction: column; gap: 4px; min-height: 300px;
+}
+.week-col-body.today-col { border-color: var(–accent); border-top-color: var(–border); }
+.week-col-body.overbooked-col { border-color: var(–danger); }
+.week-block {
+padding: 6px 8px; border-radius: 4px; font-size: 11px; font-weight: 500;
+color: rgba(0,0,0,0.82); cursor: default; line-height: 1.3;
+}
+.week-block.dl-block {
+background: transparent !important; border: 1.5px solid; font-weight: 700; color: inherit;
+}
+.week-block .wb-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.week-block .wb-dept { font-size: 10px; opacity: 0.75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.week-empty { font-size: 11px; color: var(–muted); text-align: center; padding-top: 20px; }
+.week-over-label { font-size: 9px; font-family: ‘Consolas’, ‘Courier New’, monospace; color: var(–danger); margin-top: 2px; }
+
+/* ── CAPACITY VIEW ── */
+.cap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 9px; padding-bottom: 20px; }
+.cap-card { background: var(–surface); border: 1px solid var(–border); border-radius: 7px; padding: 13px; }
+.cap-card.current { border-color: var(–accent); }
+.cap-card-month { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 12px; margin-bottom: 9px; }
+.cap-card-bar { height: 6px; background: var(–surface2); border-radius: 3px; overflow: hidden; margin-bottom: 5px; }
+.cap-card-fill { height: 100%; border-radius: 3px; }
+.cap-card-stats { display: flex; justify-content: space-between; font-size: 10px; color: var(–muted); }
+.cap-card-free { font-family: ‘Consolas’, ‘Courier New’, monospace; font-size: 13px; margin-top: 5px; }
+
+.empty { text-align: center; color: var(–muted); padding: 28px 14px; font-size: 13px; line-height: 1.7; }
+
+.tooltip { position: fixed; background: var(–surface2); border: 1px solid var(–border); border-radius: 6px; padding: 7px 9px; font-size: 12px; z-index: 9999; pointer-events: none; display: none; max-width: 200px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); line-height: 1.5; }
+.tooltip.show { display: block; }
+.tt-name { font-weight: 600; margin-bottom: 1px; }
+.tt-detail { color: var(–muted); font-size: 11px; }
+</style>
+
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="logo">DESIGN<span>SCHED</span></div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <h3>Add Job</h3>
+      <div class="form-row">
+        <label>Job Name</label>
+        <input type="text" id="f-name" placeholder="Annual Report cover…" />
+      </div>
+      <div class="form-row">
+        <label>Department</label>
+        <input type="text" id="f-dept" placeholder="e.g. Parks &amp; Recreation" />
+      </div>
+      <div class="form-row-2">
+        <div class="form-row">
+          <label>Deadline</label>
+          <input type="date" id="f-deadline" />
+        </div>
+        <div class="form-row">
+          <label>Days needed</label>
+          <input type="number" id="f-days" placeholder="3" min="0.5" step="0.5" />
+        </div>
+      </div>
+      <button class="btn" onclick="addJob()">+ Add Job</button>
+    </div>
+    <div class="job-list" id="job-list">
+      <div class="empty">No jobs yet.<br>Add your first job above.</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="cal-controls">
+      <div class="cal-nav">
+        <button onclick="prev()">&#8249;</button>
+        <span class="cal-title" id="cal-title">—</span>
+        <button onclick="next()">&#8250;</button>
+        <button class="today-btn" onclick="goToday()">Today</button>
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn" onclick="setView('week')">Week</button>
+        <button class="view-btn active" onclick="setView('month')">Month</button>
+        <button class="view-btn" onclick="setView('capacity')">Capacity</button>
+      </div>
+    </div>
+
+```
+<div class="cap-strip" id="cap-strip">
+  <span class="cap-label" id="cap-label">—</span>
+  <div class="cap-track"><div class="cap-fill" id="cap-fill"></div></div>
+  <div class="cap-info" id="cap-info"></div>
+</div>
+
+<div class="cal-wrap" id="cal-wrap"></div>
+```
+
+  </main>
+</div>
+
+<div class="tooltip" id="tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-detail" id="tt-detail"></div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+let jobs = JSON.parse(localStorage.getItem('ds3-jobs') || '[]');
+let viewDate = new Date();
+let currentView = 'month';
+
+const COLORS = [
+  '#5b8dee','#e8925b','#5bce8a','#c45bee','#e8d45b',
+  '#e85b6a','#5beee8','#ee5bb8','#a3ee5b','#ee8b5b',
+  '#5bb8ee','#ee5b5b','#5beebc','#d4ee5b','#b05bee'
+];
+
+// ── CORE HELPERS ───────────────────────────────────────────────────────────
+function save() { localStorage.setItem('ds3-jobs', JSON.stringify(jobs)); }
+function dateKey(d) { return d.toISOString().slice(0,10); }
+function todayKey() { return dateKey(new Date()); }
+function isWorkDay(d) { const w = d.getDay(); return w !== 0 && w !== 6; }
+
+function getJobDays(job) {
+  if (!job.deadline || !job.days) return [];
+  const deadline = new Date(job.deadline + 'T00:00:00');
+  let rem = job.days;
+  const result = [];
+  const d = new Date(deadline);
+  const limit = new Date(deadline.getFullYear() - 5, 0, 1);
+  while (rem > 0 && d >= limit) {
+    if (isWorkDay(d)) { result.push(new Date(d)); rem--; }
+    if (rem > 0) d.setDate(d.getDate() - 1);
+  }
+  return result; // latest first
+}
+
+function buildMap() {
+  const map = {};
+  jobs.forEach((job, ji) => {
+    const color = COLORS[ji % COLORS.length];
+    getJobDays(job).forEach(d => {
+      const k = dateKey(d);
+      if (!map[k]) map[k] = [];
+      map[k].push({ jobIdx: ji, name: job.name, dept: job.department||'', color, isDeadline: false });
+    });
+    if (job.deadline) {
+      const k = job.deadline;
+      if (!map[k]) map[k] = [];
+      map[k].push({ jobIdx: ji, name: job.name, dept: job.department||'', color, isDeadline: true });
+    }
+  });
+  return map;
+}
+
+function getMonthStats(y, m) {
+  let workDays = 0;
+  const d = new Date(y, m, 1);
+  while (d.getMonth() === m) { if (isWorkDay(d)) workDays++; d.setDate(d.getDate()+1); }
+  const map = buildMap();
+  let bookedDays = 0;
+  const d2 = new Date(y, m, 1);
+  while (d2.getMonth() === m) {
+    if (isWorkDay(d2)) {
+      const blocks = (map[dateKey(d2)]||[]).filter(b=>!b.isDeadline);
+      if (new Set(blocks.map(b=>b.jobIdx)).size > 0) bookedDays++;
+    }
+    d2.setDate(d2.getDate()+1);
+  }
+  return { workDays, bookedDays, freeDays: Math.max(0, workDays - bookedDays) };
+}
+
+// Get the Monday of the week containing d
+function weekStart(d) {
+  const copy = new Date(d);
+  const dow = copy.getDay(); // 0=Sun
+  // shift to Monday: if Sun(0) go back 6, else go back dow-1
+  const diff = dow === 0 ? -6 : 1 - dow;
+  copy.setDate(copy.getDate() + diff);
+  copy.setHours(0,0,0,0);
+  return copy;
+}
+
+function deadlineStatus(dl) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = new Date(dl + 'T00:00:00');
+  const diff = Math.round((d - today) / 86400000);
+  if (diff < 0) return { label: 'OVERDUE', cls: 'badge-danger' };
+  if (diff === 0) return { label: 'DUE TODAY', cls: 'badge-danger' };
+  if (diff <= 7) return { label: diff+'d left', cls: 'badge-warn' };
+  return { label: diff+'d left', cls: 'badge-ok' };
+}
+
+function fmtDate(dl) {
+  return new Date(dl+'T00:00:00').toLocaleDateString('en-NZ',{day:'numeric',month:'short',year:'numeric'});
+}
+
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function render() {
+  renderCapStrip();
+  renderJobList();
+  if (currentView === 'week') renderWeek();
+  else if (currentView === 'month') renderMonth();
+  else renderCapacity();
+}
+
+function renderCapStrip() {
+  const strip = document.getElementById('cap-strip');
+  if (currentView === 'capacity') { strip.style.display = 'none'; return; }
+  strip.style.display = 'flex';
+
+  let y, m;
+  if (currentView === 'week') {
+    const ws = weekStart(viewDate);
+    y = ws.getFullYear(); m = ws.getMonth();
+  } else {
+    y = viewDate.getFullYear(); m = viewDate.getMonth();
+  }
+
+  const { workDays, bookedDays, freeDays } = getMonthStats(y, m);
+  const pct = workDays ? Math.round((bookedDays/workDays)*100) : 0;
+  const col = pct > 90 ? 'var(--danger)' : pct > 70 ? 'var(--warn)' : 'var(--success)';
+  document.getElementById('cap-fill').style.cssText = `width:${Math.min(pct,100)}%;background:${col}`;
+  document.getElementById('cap-label').textContent =
+    new Date(y,m,1).toLocaleString('default',{month:'long',year:'numeric'});
+  document.getElementById('cap-info').innerHTML =
+    `<strong style="color:${col}">${pct}%</strong>&nbsp;${bookedDays}d booked &middot; <strong style="color:var(--success)">${freeDays}d free</strong> of ${workDays} work days`;
+}
+
+// ── WEEK VIEW ──────────────────────────────────────────────────────────────
+function renderWeek() {
+  const ws = weekStart(viewDate);
+  const we = new Date(ws); we.setDate(we.getDate() + 4); // Fri
+
+  const wsFmt = ws.toLocaleDateString('en-NZ',{day:'numeric',month:'short'});
+  const weFmt = we.toLocaleDateString('en-NZ',{day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('cal-title').textContent = `${wsFmt} – ${weFmt}`;
+
+  const map = buildMap();
+  const today = todayKey();
+
+  let html = '<div class="week-wrap"><div class="week-grid">';
+
+  for (let i = 0; i < 5; i++) { // Mon–Fri
+    const d = new Date(ws); d.setDate(ws.getDate() + i);
+    const k = dateKey(d);
+    const isToday = k === today;
+    const allBlocks = map[k] || [];
+    const workBlocks = allBlocks.filter(b => !b.isDeadline);
+    const dlBlocks   = allBlocks.filter(b => b.isDeadline);
+    const jobCount = new Set(workBlocks.map(b=>b.jobIdx)).size;
+    const isOver = jobCount > 1;
+    const dayNames = ['Mon','Tue','Wed','Thu','Fri'];
+
+    html += `<div class="week-col">`;
+
+    // Header
+    html += `<div class="week-col-header${isToday?' today-col':''}">
+      <div class="wday">${dayNames[i]}</div>
+      <div class="wdate">${d.getDate()}</div>
+    </div>`;
+
+    // Body
+    let bodyCls = 'week-col-body';
+    if (isToday) bodyCls += ' today-col';
+    if (isOver) bodyCls += ' overbooked-col';
+    html += `<div class="${bodyCls}">`;
+
+    if (workBlocks.length === 0 && dlBlocks.length === 0) {
+      html += `<div class="week-empty">Free</div>`;
+    }
+
+    // Work blocks (deduplicated by job)
+    const seenW = new Set();
+    workBlocks.forEach(b => {
+      if (seenW.has(b.jobIdx)) return; seenW.add(b.jobIdx);
+      html += `<div class="week-block" style="background:${b.color}"
+        onmouseover="tip(event,'${esc(b.name)}','${esc(b.dept)||'No department'}')"
+        onmouseout="hideTip()">
+        <div class="wb-name">${esc(b.name)}</div>
+        ${b.dept ? `<div class="wb-dept">${esc(b.dept)}</div>` : ''}
+      </div>`;
+    });
+
+    if (isOver) html += `<div class="week-over-label">&#9888; ${jobCount} jobs overlap</div>`;
+
+    // Deadline flags
+    const seenD = new Set();
+    dlBlocks.forEach(b => {
+      if (seenD.has(b.jobIdx)) return; seenD.add(b.jobIdx);
+      html += `<div class="week-block dl-block" style="border-color:${b.color};color:${b.color}"
+        onmouseover="tip(event,'${esc(b.name)}','&#9873; Deadline')"
+        onmouseout="hideTip()">
+        <div class="wb-name">&#9873; ${esc(b.name)}</div>
+        ${b.dept ? `<div class="wb-dept" style="color:${b.color}">${esc(b.dept)}</div>` : ''}
+      </div>`;
+    });
+
+    html += `</div></div>`; // close body + col
+  }
+
+  html += '</div></div>';
+  document.getElementById('cal-wrap').innerHTML = html;
+}
+
+// ── MONTH VIEW ─────────────────────────────────────────────────────────────
+function renderMonth() {
+  const y = viewDate.getFullYear(), m = viewDate.getMonth();
+  document.getElementById('cal-title').textContent =
+    new Date(y,m,1).toLocaleString('default',{month:'long',year:'numeric'});
+
+  const map = buildMap();
+  const today = todayKey();
+  const firstDow = new Date(y,m,1).getDay();
+  const daysInMonth = new Date(y,m+1,0).getDate();
+
+  let html = '<div class="month-grid">';
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(n => html+=`<div class="day-header">${n}</div>`);
+  for (let i=0;i<firstDow;i++) html += monthCell(new Date(y,m,1-(firstDow-i)),map,today,true);
+  for (let i=1;i<=daysInMonth;i++) html += monthCell(new Date(y,m,i),map,today,false);
+  const trailing = (7-((firstDow+daysInMonth)%7))%7;
+  for (let i=1;i<=trailing;i++) html += monthCell(new Date(y,m+1,i),map,today,true);
+  html += '</div>';
+  document.getElementById('cal-wrap').innerHTML = html;
+}
+
+function monthCell(date, map, today, other) {
+  const k = dateKey(date);
+  const allBlocks = map[k] || [];
+  const workBlocks = allBlocks.filter(b=>!b.isDeadline);
+  const dlBlocks   = allBlocks.filter(b=>b.isDeadline);
+  const jobCount = new Set(workBlocks.map(b=>b.jobIdx)).size;
+  const isToday = k === today;
+  const dow = date.getDay();
+  const isOver = jobCount > 1;
+
+  let cls = 'day-cell';
+  if (other) cls += ' other-month';
+  if (dow===0||dow===6) cls += ' weekend';
+  if (isToday) cls += ' today';
+  if (isOver && !other) cls += ' overbooked';
+
+  let h = `<div class="${cls}"><div class="day-num">${date.getDate()}</div>`;
+  if (isOver) h += `<div class="over-pip">${jobCount}</div>`;
+  h += '<div class="day-blocks">';
+
+  const seenW = new Set();
+  workBlocks.forEach(b => {
+    if (seenW.has(b.jobIdx)) return; seenW.add(b.jobIdx);
+    h += `<div class="block" style="background:${b.color}"
+      onmouseover="tip(event,'${esc(b.name)}','${esc(b.dept)||'Working on this job'}')"
+      onmouseout="hideTip()">${esc(b.name)}</div>`;
+  });
+
+  const seenD = new Set();
+  dlBlocks.forEach(b => {
+    if (seenD.has(b.jobIdx)) return; seenD.add(b.jobIdx);
+    h += `<div class="block dl-flag" style="border-color:${b.color};color:${b.color}"
+      onmouseover="tip(event,'${esc(b.name)}','&#9873; Deadline')"
+      onmouseout="hideTip()">&#9873; ${esc(b.name)}</div>`;
+  });
+
+  h += '</div></div>';
+  return h;
+}
+
+// ── CAPACITY VIEW ──────────────────────────────────────────────────────────
+function renderCapacity() {
+  document.getElementById('cal-title').textContent = 'Capacity Overview';
+  const now = new Date();
+  let html = '<div class="cap-grid">';
+  for (let offset=-1; offset<=11; offset++) {
+    const d = new Date(now.getFullYear(), now.getMonth()+offset, 1);
+    const y=d.getFullYear(), mo=d.getMonth();
+    const {workDays,bookedDays,freeDays} = getMonthStats(y,mo);
+    const pct = workDays ? Math.round((bookedDays/workDays)*100) : 0;
+    const isPast = y<now.getFullYear()||(y===now.getFullYear()&&mo<now.getMonth());
+    const isCurrent = y===now.getFullYear()&&mo===now.getMonth();
+    const col = pct>90?'var(--danger)':pct>70?'var(--warn)':'var(--success)';
+    html += `<div class="cap-card${isCurrent?' current':''}">
+      <div class="cap-card-month" style="color:${isCurrent?'var(--accent)':isPast?'var(--muted)':'var(--text)'}">${d.toLocaleString('default',{month:'short',year:'numeric'})}</div>
+      <div class="cap-card-bar"><div class="cap-card-fill" style="width:${Math.min(pct,100)}%;background:${isPast?'var(--muted)':col}"></div></div>
+      <div class="cap-card-stats"><span>${pct}% full</span><span>${workDays}d work</span></div>
+      <div class="cap-card-free" style="color:${isPast?'var(--muted)':col}">${freeDays}d free</div>
+    </div>`;
+  }
+  html += '</div>';
+  document.getElementById('cal-wrap').innerHTML = html;
+}
+
+// ── JOB LIST ───────────────────────────────────────────────────────────────
+function renderJobList() {
+  const el = document.getElementById('job-list');
+  if (!jobs.length) { el.innerHTML='<div class="empty">No jobs yet.<br>Add your first job above.</div>'; return; }
+
+  // Sort by deadline but keep original index as a data attribute
+  const sorted = jobs.map((j,i)=>({...j,origIdx:i})).sort((a,b)=>{
+    if (!a.deadline) return 1; if (!b.deadline) return -1;
+    return a.deadline.localeCompare(b.deadline);
+  });
+
+  el.innerHTML = sorted.map(job => {
+    const i = job.origIdx;
+    const color = COLORS[i % COLORS.length];
+    const status = job.deadline ? deadlineStatus(job.deadline) : null;
+    const sched = getJobDays(job);
+    const startDate = sched.length ? sched[sched.length-1].toLocaleDateString('en-NZ',{day:'numeric',month:'short'}) : '—';
+    return `<div class="job-card" id="jcard-${i}" style="border-left-color:${color}">
+      <div class="job-view">
+        <div class="job-name">${esc(job.name)}</div>
+        <div class="job-dept">${esc(job.department||'')}</div>
+        <div class="job-meta">
+          ${job.days?`<span class="badge">${job.days}d</span>`:''}
+          ${sched.length?`<span class="badge">starts ${startDate}</span>`:''}
+          ${status?`<span class="badge ${status.cls}">${status.label}</span>`:''}
+        </div>
+        <div class="job-actions">
+          <span class="job-due">&#128197; ${job.deadline?fmtDate(job.deadline):'—'}</span>
+          <button class="btn btn-sm btn-ghost" onclick="startEdit(${i}); event.stopPropagation();">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteJob(${i}); event.stopPropagation();">&#x2715;</button>
+        </div>
+      </div>
+      <div class="edit-panel" id="edit-panel-${i}">
+        <div class="edit-lbl" style="margin-bottom:6px;font-size:11px;color:var(--accent)">Editing: ${esc(job.name)}</div>
+        <div class="edit-row">
+          <div><div class="edit-lbl">Deadline</div><input type="date" id="e-dl-${i}" value="${job.deadline||''}" /></div>
+          <div><div class="edit-lbl">Days needed</div><input type="number" id="e-days-${i}" value="${job.days||''}" min="0.5" step="0.5" /></div>
+        </div>
+        <div class="edit-btns">
+          <button class="btn btn-sm" onclick="saveEdit(${i})">Save changes</button>
+          <button class="btn btn-sm btn-ghost" onclick="cancelEdit(${i})">Cancel</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── CRUD ───────────────────────────────────────────────────────────────────
+function addJob() {
+  const name = document.getElementById('f-name').value.trim();
+  const dept = document.getElementById('f-dept').value.trim();
+  const deadline = document.getElementById('f-deadline').value;
+  const days = parseFloat(document.getElementById('f-days').value);
+  if (!name) return alert('Please enter a job name.');
+  if (!deadline) return alert('Please set a deadline.');
+  if (!days||days<=0) return alert('Please enter number of days needed.');
+  jobs.push({name,department:dept,deadline,days,created:new Date().toISOString()});
+  save();
+  ['f-name','f-dept','f-deadline','f-days'].forEach(id=>document.getElementById(id).value='');
+  render();
+}
+function deleteJob(i) { if (!confirm(`Delete "${jobs[i].name}"?`)) return; jobs.splice(i,1); save(); render(); }
+function startEdit(i) {
+  // Hide any other open edit panels first
+  document.querySelectorAll('.edit-panel').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.job-view').forEach(v => v.style.display = 'block');
+  const panel = document.getElementById('edit-panel-'+i);
+  const card = document.getElementById('jcard-'+i);
+  if (panel) panel.style.display = 'block';
+  if (card) card.querySelector('.job-view').style.display = 'none';
+}
+function cancelEdit(i) {
+  const panel = document.getElementById('edit-panel-'+i);
+  const card = document.getElementById('jcard-'+i);
+  if (panel) panel.style.display = 'none';
+  if (card) card.querySelector('.job-view').style.display = 'block';
+}
+function saveEdit(i) {
+  const dl = document.getElementById('e-dl-'+i)?.value;
+  const d = parseFloat(document.getElementById('e-days-'+i)?.value);
+  if (dl) jobs[i].deadline = dl;
+  if (d > 0) jobs[i].days = d;
+  save(); render();
+}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+function setView(v) {
+  currentView = v;
+  document.querySelectorAll('.view-btn').forEach((b,i) =>
+    b.classList.toggle('active', ['week','month','capacity'][i]===v));
+  render();
+}
+
+function prev() {
+  if (currentView === 'week') viewDate.setDate(viewDate.getDate()-7);
+  else viewDate.setMonth(viewDate.getMonth()-1);
+  render();
+}
+function next() {
+  if (currentView === 'week') viewDate.setDate(viewDate.getDate()+7);
+  else viewDate.setMonth(viewDate.getMonth()+1);
+  render();
+}
+function goToday() { viewDate = new Date(); render(); }
+
+// ── TOOLTIP ────────────────────────────────────────────────────────────────
+function tip(e, name, detail) {
+  document.getElementById('tt-name').textContent = name;
+  document.getElementById('tt-detail').innerHTML = detail;
+  const t = document.getElementById('tooltip');
+  t.classList.add('show');
+  t.style.left=(e.clientX+14)+'px'; t.style.top=(e.clientY-10)+'px';
+}
+function hideTip() { document.getElementById('tooltip').classList.remove('show'); }
+document.addEventListener('mousemove', e => {
+  const t = document.getElementById('tooltip');
+  if (t.classList.contains('show')) { t.style.left=(e.clientX+14)+'px'; t.style.top=(e.clientY-10)+'px'; }
+});
+
+render();
+</script>
+
+</body>
+</html>

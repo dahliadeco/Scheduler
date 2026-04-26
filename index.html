@@ -6,14 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Design Scheduler</title>
 <style>
-/* WCAG AA compliant colour palette on dark backgrounds:
-   --text #f0f0f8 on --bg #0f0f11 = 17.4:1 ✓
-   --accent #7aaaff on dark = 5.2:1 ✓
-   --muted #a0a0b8 on dark = 5.8:1 ✓
-   --success #6bde9a = 5.1:1 ✓
-   --warn #f5e070 = 9.4:1 ✓
-   --danger #ff7a85 = 5.3:1 ✓
-   Block text #111 on light job colours = passes at all sizes ✓ */
 :root {
   --bg: #0f0f11;
   --surface: #1c1c22;
@@ -25,61 +17,40 @@
   --success: #6bde9a;
   --warn: #f5e070;
   --danger: #ff7a85;
+  --orange: #ffaa55;
+  /* Status colours */
+  --s-notstarted: #5b8dee;
+  --s-inprogress: #5bce8a;
+  --s-complete-bg: #f0f0f8;
+  --s-complete-text: #111;
+  --s-overdue-start: #ffaa55;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; min-height: 100vh; }
 
 /* ── TOP NAV ── */
-.topnav {
-background: var(–surface);
-border-bottom: 2px solid var(–border);
-display: flex; align-items: center; justify-content: space-between;
-padding: 0 16px; height: 56px; position: sticky; top: 0; z-index: 100;
-}
+.topnav { background: var(–surface); border-bottom: 2px solid var(–border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 56px; position: sticky; top: 0; z-index: 100; }
 .logo { font-family: Consolas, ‘Courier New’, monospace; font-size: 15px; letter-spacing: 0.06em; color: var(–accent); font-weight: 700; }
 .logo span { color: var(–muted); font-weight: 400; }
-.add-btn {
-background: var(–accent); color: #0f0f11; border: none;
-padding: 10px 18px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer;
-}
+.add-btn { background: var(–accent); color: #0f0f11; border: none; padding: 10px 18px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
 
 /* ── TABS ── */
-.tabs {
-display: flex; background: var(–surface); border-bottom: 2px solid var(–border);
-position: sticky; top: 56px; z-index: 99;
-}
-.tab {
-flex: 1; text-align: center; padding: 14px 4px; font-size: 14px; font-weight: 600;
-color: var(–muted); cursor: pointer; border-bottom: 3px solid transparent;
-transition: all 0.15s;
-}
+.tabs { display: flex; background: var(–surface); border-bottom: 2px solid var(–border); position: sticky; top: 56px; z-index: 99; }
+.tab { flex: 1; text-align: center; padding: 14px 4px; font-size: 15px; font-weight: 600; color: var(–muted); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
 .tab.active { color: var(–accent); border-bottom-color: var(–accent); }
 
-/* ── CAP STRIP ── */
-.cap-strip {
-background: var(–surface); border-bottom: 1px solid var(–border);
-padding: 10px 16px; display: flex; align-items: center; gap: 10px;
-}
-.cap-label { font-size: 13px; color: var(–muted); white-space: nowrap; font-weight: 600; }
-.cap-track { flex: 1; height: 6px; background: var(–surface2); border-radius: 3px; overflow: hidden; }
-.cap-fill { height: 100%; border-radius: 3px; }
-.cap-info { font-size: 13px; color: var(–text); white-space: nowrap; font-weight: 600; }
+/* ── ALERT BANNER ── */
+.alert-banner { background: rgba(255,170,85,0.15); border-bottom: 2px solid rgba(255,170,85,0.5); padding: 12px 16px; display: none; }
+.alert-banner.show { display: block; }
+.alert-title { font-size: 13px; font-weight: 700; color: var(–orange); margin-bottom: 6px; }
+.alert-item { font-size: 13px; color: var(–text); padding: 3px 0; border-bottom: 1px solid rgba(255,170,85,0.2); }
+.alert-item:last-child { border-bottom: none; }
 
 /* ── CAL NAV ── */
-.cal-nav {
-display: flex; align-items: center; justify-content: space-between;
-padding: 10px 16px; background: var(–surface); border-bottom: 1px solid var(–border);
-}
-.cal-nav-btn {
-background: var(–surface2); border: 2px solid var(–border); color: var(–text);
-width: 40px; height: 40px; border-radius: 8px; font-size: 22px; cursor: pointer;
-display: flex; align-items: center; justify-content: center; font-weight: 700;
-}
+.cal-nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: var(–surface); border-bottom: 1px solid var(–border); }
+.cal-nav-btn { background: var(–surface2); border: 2px solid var(–border); color: var(–text); width: 40px; height: 40px; border-radius: 8px; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; }
 .cal-title { font-family: Consolas, ‘Courier New’, monospace; font-size: 16px; font-weight: 700; }
-.today-btn {
-background: var(–surface2); border: 2px solid var(–border); color: var(–text);
-padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;
-}
+.today-btn { background: var(–surface2); border: 2px solid var(–border); color: var(–text); padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
 
 /* ── CONTENT ── */
 .content { padding: 12px 12px 100px; }
@@ -95,8 +66,8 @@ padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor
 .day-num { font-family: Consolas, ‘Courier New’, monospace; font-size: 11px; font-weight: 700; color: var(–muted); margin-bottom: 3px; }
 .day-cell.today .day-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: var(–accent); color: #0f0f11; border-radius: 50%; font-size: 10px; font-weight: 700; }
 .day-blocks { display: flex; flex-direction: column; gap: 2px; }
-.block { font-size: 9px; padding: 2px 4px; border-radius: 3px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #111; }
-.block.dl-flag { background: transparent !important; border: 2px solid; font-weight: 700; color: inherit; font-size: 9px; }
+.block { font-size: 9px; padding: 2px 4px; border-radius: 3px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #111; cursor: pointer; }
+.block.dl-flag { background: transparent !important; border: 2px solid; font-weight: 700; color: inherit; font-size: 9px; cursor: pointer; }
 .over-pip { position: absolute; top: 2px; right: 2px; font-size: 8px; font-family: Consolas, monospace; font-weight: 700; color: var(–danger); background: rgba(255,122,133,0.15); border: 1px solid rgba(255,122,133,0.4); border-radius: 3px; padding: 0 3px; }
 
 /* ── WEEK VIEW ── */
@@ -110,17 +81,29 @@ padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor
 .week-col-body { flex: 1; background: var(–surface); border: 1px solid var(–border); border-radius: 0 0 6px 6px; padding: 6px 5px; display: flex; flex-direction: column; gap: 4px; min-height: 220px; }
 .week-col-body.today-col { border: 2px solid var(–accent); border-top: none; }
 .week-col-body.over-col { border-color: var(–danger); }
-.week-block { padding: 6px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #111; line-height: 1.3; }
-.week-block.dl-block { background: transparent !important; border: 2px solid; color: inherit; font-weight: 700; }
-.week-block .wb-dept { font-size: 10px; opacity: 0.75; margin-top: 2px; font-weight: 600; }
-.week-empty { font-size: 12px; color: var(–muted); text-align: center; padding-top: 20px; font-weight: 600; }
+.week-block { padding: 6px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #111; line-height: 1.4; cursor: pointer; }
+.week-block.dl-block { background: transparent !important; border: 2px solid; color: inherit; font-weight: 700; cursor: pointer; }
+.week-block .wb-num { font-size: 9px; opacity: 0.7; font-weight: 600; }
+.week-block .wb-name { font-size: 11px; font-weight: 700; }
+.week-block .wb-dept { font-size: 10px; opacity: 0.75; margin-top: 1px; font-weight: 600; }
 .week-over { font-size: 10px; color: var(–danger); margin-top: 3px; font-weight: 700; }
+
+/* Spanning job block in week view */
+.week-span-row { display: grid; gap: 4px; margin-bottom: 4px; }
+.week-span-block { padding: 6px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #111; line-height: 1.4; cursor: pointer; min-height: 44px; }
+
+/* ── STATUS LEGEND ── */
+.status-legend { display: flex; gap: 8px; flex-wrap: wrap; padding: 8px 12px; background: var(–surface); border-bottom: 1px solid var(–border); }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(–muted); font-weight: 600; }
+.legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
 /* ── JOB LIST VIEW ── */
 .job-card { background: var(–surface); border: 1px solid var(–border); border-radius: 10px; padding: 16px; margin-bottom: 12px; border-left: 4px solid; }
-.job-num { font-family: Consolas, ‘Courier New’, monospace; font-size: 12px; color: var(–muted); font-weight: 600; margin-bottom: 4px; }
-.job-name { font-weight: 700; font-size: 17px; line-height: 1.3; }
+.job-status-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; }
+.job-num { font-family: Consolas, ‘Courier New’, monospace; font-size: 13px; color: var(–muted); font-weight: 600; margin-bottom: 4px; }
+.job-name { font-weight: 700; font-size: 18px; line-height: 1.3; }
 .job-dept { font-size: 14px; color: var(–muted); margin-top: 3px; font-weight: 500; }
+.job-notes { font-size: 13px; color: var(–muted); margin-top: 8px; line-height: 1.5; font-style: italic; }
 .job-meta { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
 .badge { font-family: Consolas, ‘Courier New’, monospace; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(–bg); color: var(–muted); border: 1px solid var(–border); }
 .badge-warn { background: rgba(245,224,112,0.15); color: var(–warn); border-color: rgba(245,224,112,0.4); }
@@ -128,26 +111,38 @@ padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor
 .badge-ok { background: rgba(107,222,154,0.15); color: var(–success); border-color: rgba(107,222,154,0.4); }
 .job-due { font-size: 13px; color: var(–muted); margin-top: 8px; font-weight: 600; }
 .job-btns { display: flex; gap: 10px; margin-top: 14px; }
-.jbtn { flex: 1; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; text-align: center; }
+.jbtn { flex: 1; padding: 13px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; text-align: center; }
 .jbtn-edit { background: var(–surface2); color: var(–text); border: 2px solid var(–border); }
 .jbtn-del { background: rgba(255,122,133,0.15); color: var(–danger); border: 2px solid rgba(255,122,133,0.4); }
 
 /* ── EDIT PANEL ── */
 .edit-panel { display: none; margin-top: 14px; padding-top: 14px; border-top: 2px solid var(–border); }
-.edit-label { font-size: 13px; color: var(–accent); font-weight: 700; margin-bottom: 12px; }
-.edit-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.edit-fields-full { margin-bottom: 12px; }
-.field-label { font-size: 12px; color: var(–muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
-input[type=“date”], input[type=“number”], input[type=“text”] {
+.edit-heading { font-size: 14px; color: var(–accent); font-weight: 700; margin-bottom: 14px; }
+.field-group { margin-bottom: 14px; }
+.field-label { font-size: 12px; color: var(–muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.field-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+input[type=“date”], input[type=“number”], input[type=“text”], textarea {
 background: var(–bg); border: 2px solid var(–border); color: var(–text);
-padding: 10px 12px; border-radius: 8px; font-size: 15px; width: 100%;
+padding: 12px 14px; border-radius: 8px; font-size: 16px; width: 100%;
 -webkit-appearance: none; appearance: none; font-weight: 500;
+font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, sans-serif;
 }
-input:focus { outline: none; border-color: var(–accent); }
-input::placeholder { color: var(–muted); }
-.edit-btns { display: flex; gap: 10px; }
-.edit-save { flex: 2; background: var(–accent); color: #0f0f11; border: none; padding: 13px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
-.edit-cancel { flex: 1; background: transparent; border: 2px solid var(–border); color: var(–muted); padding: 13px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
+textarea { resize: vertical; min-height: 80px; }
+input:focus, textarea:focus { outline: none; border-color: var(–accent); }
+input::placeholder, textarea::placeholder { color: var(–muted); }
+
+/* Status radio buttons */
+.status-radios { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.status-radio { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; border: 2px solid var(–border); cursor: pointer; font-size: 15px; font-weight: 600; }
+.status-radio input[type=“radio”] { width: 20px; height: 20px; accent-color: var(–accent); flex-shrink: 0; }
+.status-radio.s-notstarted { border-color: var(–s-notstarted); }
+.status-radio.s-inprogress { border-color: var(–s-inprogress); }
+.status-radio.s-complete { border-color: var(–border); }
+.dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+.edit-btns { display: flex; gap: 10px; margin-top: 4px; }
+.edit-save { flex: 2; background: var(–accent); color: #0f0f11; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.edit-cancel { flex: 1; background: transparent; border: 2px solid var(–border); color: var(–muted); padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
 
 /* ── ADD JOB MODAL ── */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: flex-end; }
@@ -155,7 +150,7 @@ input::placeholder { color: var(–muted); }
 .modal { background: var(–surface); border-radius: 20px 20px 0 0; padding: 24px 18px 50px; width: 100%; position: relative; max-height: 92vh; overflow-y: auto; }
 .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
 .modal-field { margin-bottom: 16px; }
-.modal-label { font-size: 12px; color: var(–muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.modal-label { font-size: 13px; color: var(–muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
 .modal-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
 .modal-add { width: 100%; background: var(–accent); color: #0f0f11; border: none; padding: 16px; border-radius: 10px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 6px; }
 .modal-close { position: absolute; top: 18px; right: 18px; background: var(–surface2); border: 2px solid var(–border); color: var(–muted); width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; }
@@ -177,10 +172,18 @@ input::placeholder { color: var(–muted); }
   <div class="tab" onclick="setTab('jobs')">Jobs</div>
 </div>
 
-<div class="cap-strip" id="cap-strip">
-  <span class="cap-label" id="cap-label">—</span>
-  <div class="cap-track"><div class="cap-fill" id="cap-fill"></div></div>
-  <span class="cap-info" id="cap-info"></span>
+<!-- Overdue start alert banner -->
+
+<div class="alert-banner" id="alert-banner">
+  <div class="alert-title">⚠ Jobs that should have started — please update their status:</div>
+  <div id="alert-items"></div>
+</div>
+
+<div class="status-legend" id="status-legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#5b8dee"></div>Not started</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#5bce8a"></div>In progress</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f0f0f8;border:1px solid #38384a"></div>Complete</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ffaa55"></div>Overdue start</div>
 </div>
 
 <div class="cal-nav" id="cal-nav">
@@ -222,22 +225,34 @@ input::placeholder { color: var(–muted); }
         <input type="number" id="f-days" placeholder="3" min="0.5" step="0.5" />
       </div>
     </div>
+    <div class="modal-field">
+      <div class="modal-label">Notes</div>
+      <textarea id="f-notes" placeholder="Any notes about this job…"></textarea>
+    </div>
     <button class="modal-add" onclick="addJob()">+ Add Job</button>
   </div>
 </div>
 
 <script>
-let jobs = JSON.parse(localStorage.getItem('ds5-jobs') || '[]');
+// ── STATE ──────────────────────────────────────────────────────────────────
+let jobs = JSON.parse(localStorage.getItem('ds6-jobs') || '[]');
 let viewDate = new Date();
 let currentTab = 'month';
 
-const COLORS = [
-  '#5b8dee','#e8925b','#5bce8a','#c45bee','#e8d45b',
-  '#e85b6a','#5beee8','#ee5bb8','#a3ee5b','#ee8b5b',
-  '#5bb8ee','#ee5b5b','#5beebc','#d4ee5b','#b05bee'
-];
+// Status colour mapping
+function jobColor(job) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const sched = getJobDays(job);
+  const startDate = sched.length ? sched[sched.length-1] : null;
+  const status = job.status || 'notstarted';
+  if (status === 'complete') return { bg: '#f0f0f8', text: '#111' };
+  if (status === 'inprogress') return { bg: '#5bce8a', text: '#111' };
+  // Overdue start: not started and start date has passed
+  if (status === 'notstarted' && startDate && startDate < today) return { bg: '#ffaa55', text: '#111' };
+  return { bg: '#5b8dee', text: '#111' };
+}
 
-function save() { localStorage.setItem('ds5-jobs', JSON.stringify(jobs)); }
+function save() { localStorage.setItem('ds6-jobs', JSON.stringify(jobs)); }
 function dateKey(d) { return d.toISOString().slice(0,10); }
 function todayKey() { return dateKey(new Date()); }
 function isWorkDay(d) { const w = d.getDay(); return w !== 0 && w !== 6; }
@@ -253,42 +268,25 @@ function getJobDays(job) {
     if (isWorkDay(d)) { result.push(new Date(d)); rem--; }
     if (rem > 0) d.setDate(d.getDate() - 1);
   }
-  return result;
+  return result; // latest first, so result[result.length-1] = start date
 }
 
 function buildMap() {
   const map = {};
   jobs.forEach((job, ji) => {
-    const color = COLORS[ji % COLORS.length];
+    const col = jobColor(job);
     getJobDays(job).forEach(d => {
       const k = dateKey(d);
       if (!map[k]) map[k] = [];
-      map[k].push({ ji, name: job.name, jobnum: job.jobnum||'', dept: job.department||'', color, dl: false });
+      map[k].push({ ji, name: job.name, jobnum: job.jobnum||'', dept: job.department||'', bg: col.bg, text: col.text, dl: false });
     });
     if (job.deadline) {
       const k = job.deadline;
       if (!map[k]) map[k] = [];
-      map[k].push({ ji, name: job.name, jobnum: job.jobnum||'', dept: job.department||'', color, dl: true });
+      map[k].push({ ji, name: job.name, jobnum: job.jobnum||'', dept: job.department||'', bg: col.bg, text: col.text, dl: true });
     }
   });
   return map;
-}
-
-function getMonthStats(y, m) {
-  let workDays = 0;
-  const d = new Date(y, m, 1);
-  while (d.getMonth() === m) { if (isWorkDay(d)) workDays++; d.setDate(d.getDate()+1); }
-  const map = buildMap();
-  let bookedDays = 0;
-  const d2 = new Date(y, m, 1);
-  while (d2.getMonth() === m) {
-    if (isWorkDay(d2)) {
-      const bs = (map[dateKey(d2)]||[]).filter(b=>!b.dl);
-      if (new Set(bs.map(b=>b.ji)).size > 0) bookedDays++;
-    }
-    d2.setDate(d2.getDate()+1);
-  }
-  return { workDays, bookedDays, freeDays: Math.max(0, workDays - bookedDays) };
 }
 
 function weekStart(d) {
@@ -316,29 +314,44 @@ function esc(s) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
+// ── OVERDUE START ALERTS ───────────────────────────────────────────────────
+function checkAlerts() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const overdue = jobs.filter((job, i) => {
+    if ((job.status||'notstarted') !== 'notstarted') return false;
+    const sched = getJobDays(job);
+    const startDate = sched.length ? sched[sched.length-1] : null;
+    return startDate && startDate < today;
+  });
+
+  const banner = document.getElementById('alert-banner');
+  const items = document.getElementById('alert-items');
+  if (overdue.length) {
+    banner.classList.add('show');
+    items.innerHTML = overdue.map(job => {
+      const i = jobs.indexOf(job);
+      return `<div class="alert-item" onclick="goToJob(${i})" style="cursor:pointer">
+        ${job.jobnum ? '#'+esc(job.jobnum)+' · ' : ''}${esc(job.name)} — tap to update status
+      </div>`;
+    }).join('');
+  } else {
+    banner.classList.remove('show');
+  }
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
 function render() {
-  updateCapStrip();
+  checkAlerts();
   const calNav = document.getElementById('cal-nav');
-  const capStrip = document.getElementById('cap-strip');
+  const legend = document.getElementById('status-legend');
   calNav.style.display = currentTab === 'jobs' ? 'none' : 'flex';
-  capStrip.style.display = currentTab === 'jobs' ? 'none' : 'flex';
+  legend.style.display = currentTab === 'jobs' ? 'none' : 'flex';
   if (currentTab === 'week') renderWeek();
   else if (currentTab === 'month') renderMonth();
   else renderJobList();
 }
 
-function updateCapStrip() {
-  let y, m;
-  if (currentTab === 'week') { const ws = weekStart(viewDate); y = ws.getFullYear(); m = ws.getMonth(); }
-  else { y = viewDate.getFullYear(); m = viewDate.getMonth(); }
-  const { workDays, bookedDays, freeDays } = getMonthStats(y, m);
-  const pct = workDays ? Math.round((bookedDays/workDays)*100) : 0;
-  const col = pct > 90 ? 'var(--danger)' : pct > 70 ? 'var(--warn)' : 'var(--success)';
-  document.getElementById('cap-fill').style.cssText = `width:${Math.min(pct,100)}%;background:${col}`;
-  document.getElementById('cap-label').textContent = new Date(y,m,1).toLocaleString('default',{month:'long',year:'numeric'});
-  document.getElementById('cap-info').innerHTML = `<span style="color:${col};font-weight:700">${freeDays}d free</span>`;
-}
-
+// ── WEEK VIEW ──────────────────────────────────────────────────────────────
 function renderWeek() {
   const ws = weekStart(viewDate);
   const we = new Date(ws); we.setDate(we.getDate()+4);
@@ -348,44 +361,109 @@ function renderWeek() {
 
   const map = buildMap();
   const today = todayKey();
-  const days = ['Mon','Tue','Wed','Thu','Fri'];
-  let html = '<div class="week-grid">';
+  const dayNames = ['Mon','Tue','Wed','Thu','Fri'];
 
-  for (let i = 0; i < 5; i++) {
+  // Build day keys for the week
+  const weekKeys = [];
+  for (let i=0;i<5;i++) {
+    const d = new Date(ws); d.setDate(ws.getDate()+i);
+    weekKeys.push(dateKey(d));
+  }
+
+  // Figure out which jobs span multiple consecutive days this week
+  // For each job, find which weekday indices it occupies
+  const jobSpans = {}; // ji -> array of day indices (0-4)
+  weekKeys.forEach((k, di) => {
+    const blocks = (map[k]||[]).filter(b=>!b.dl);
+    blocks.forEach(b => {
+      if (!jobSpans[b.ji]) jobSpans[b.ji] = [];
+      jobSpans[b.ji].push(di);
+    });
+  });
+
+  // For each job, check if its days are consecutive
+  // We'll render spanning jobs as a single row above the per-column layout
+  const spanningJobs = []; // {ji, startCol, endCol, job, b}
+  const handledJis = new Set();
+
+  Object.entries(jobSpans).forEach(([jiStr, cols]) => {
+    const ji = parseInt(jiStr);
+    if (cols.length < 2) return;
+    // Check consecutive
+    const sorted = [...cols].sort((a,b)=>a-b);
+    let consecutive = true;
+    for (let i=1;i<sorted.length;i++) {
+      if (sorted[i] !== sorted[i-1]+1) { consecutive = false; break; }
+    }
+    if (consecutive) {
+      handledJis.add(ji);
+      const job = jobs[ji];
+      const col = jobColor(job);
+      spanningJobs.push({ ji, startCol: sorted[0], endCol: sorted[sorted.length-1], job, bg: col.bg, text: col.text });
+    }
+  });
+
+  let html = '';
+
+  // Render spanning job rows first
+  if (spanningJobs.length) {
+    spanningJobs.forEach(span => {
+      const colCount = span.endCol - span.startCol + 1;
+      // Build a grid row
+      html += `<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:4px;">`;
+      // Empty cells before
+      for (let i=0;i<span.startCol;i++) html += `<div></div>`;
+      // Spanning block
+      html += `<div style="grid-column:span ${colCount}">
+        <div class="week-span-block" style="background:${span.bg};color:${span.text}" onclick="goToJob(${span.ji})">
+          ${span.job.jobnum?`<div class="wb-num">#${esc(span.job.jobnum)}</div>`:''}
+          <div class="wb-name">${esc(span.job.name)}</div>
+          ${span.job.department?`<div class="wb-dept">${esc(span.job.department)}</div>`:''}
+        </div>
+      </div>`;
+      // Empty cells after
+      for (let i=span.endCol+1;i<5;i++) html += `<div></div>`;
+      html += `</div>`;
+    });
+  }
+
+  // Render column grid for non-spanning jobs
+  html += '<div class="week-grid">';
+  for (let i=0;i<5;i++) {
     const d = new Date(ws); d.setDate(ws.getDate()+i);
     const k = dateKey(d);
-    const isToday = k === today;
-    const all = map[k] || [];
-    const work = all.filter(b=>!b.dl);
+    const isToday = k===today;
+    const all = map[k]||[];
+    const work = all.filter(b=>!b.dl && !handledJis.has(b.ji));
     const dls = all.filter(b=>b.dl);
-    const jobCount = new Set(work.map(b=>b.ji)).size;
+    const allWork = all.filter(b=>!b.dl);
+    const jobCount = new Set(allWork.map(b=>b.ji)).size;
     const isOver = jobCount > 1;
 
     html += `<div class="week-col">
       <div class="week-col-header${isToday?' today-col':''}">
-        <div class="wday">${days[i]}</div>
+        <div class="wday">${dayNames[i]}</div>
         <div class="wdate">${d.getDate()}</div>
       </div>
       <div class="week-col-body${isToday?' today-col':''}${isOver?' over-col':''}">`;
 
-    if (!work.length && !dls.length) html += `<div class="week-empty">Free</div>`;
-
     const seenW = new Set();
     work.forEach(b => {
       if (seenW.has(b.ji)) return; seenW.add(b.ji);
-      html += `<div class="week-block" style="background:${b.color}">
-        <div>${esc(b.name)}</div>
+      html += `<div class="week-block" style="background:${b.bg};color:${b.text}" onclick="goToJob(${b.ji})">
+        ${b.jobnum?`<div class="wb-num">#${esc(b.jobnum)}</div>`:''}
+        <div class="wb-name">${esc(b.name)}</div>
         ${b.dept?`<div class="wb-dept">${esc(b.dept)}</div>`:''}
       </div>`;
     });
 
-    if (isOver) html += `<div class="week-over">&#9888; ${jobCount} jobs overlap</div>`;
+    if (isOver) html += `<div class="week-over">&#9888; ${jobCount} jobs</div>`;
 
     const seenD = new Set();
     dls.forEach(b => {
       if (seenD.has(b.ji)) return; seenD.add(b.ji);
-      html += `<div class="week-block dl-block" style="border-color:${b.color};color:${b.color}">
-        <div>&#9873; ${esc(b.name)}</div>
+      html += `<div class="week-block dl-block" style="border-color:${b.bg};color:${b.bg}" onclick="goToJob(${b.ji})">
+        &#9873; ${esc(b.name)}
       </div>`;
     });
 
@@ -395,6 +473,7 @@ function renderWeek() {
   document.getElementById('content').innerHTML = html;
 }
 
+// ── MONTH VIEW ─────────────────────────────────────────────────────────────
 function renderMonth() {
   const y = viewDate.getFullYear(), m = viewDate.getMonth();
   document.getElementById('cal-title').textContent =
@@ -433,13 +512,18 @@ function mCell(date, map, today, other) {
   if (jobCount>1) h+=`<div class="over-pip">${jobCount}</div>`;
   h += '<div class="day-blocks">';
   const sw = new Set();
-  work.forEach(b=>{ if(sw.has(b.ji))return;sw.add(b.ji); h+=`<div class="block" style="background:${b.color}">${esc(b.name)}</div>`; });
+  work.forEach(b=>{ if(sw.has(b.ji))return;sw.add(b.ji);
+    h+=`<div class="block" style="background:${b.bg};color:${b.text}" onclick="goToJob(${b.ji})">${esc(b.name)}</div>`;
+  });
   const sd = new Set();
-  dls.forEach(b=>{ if(sd.has(b.ji))return;sd.add(b.ji); h+=`<div class="block dl-flag" style="border-color:${b.color};color:${b.color}">&#9873; ${esc(b.name)}</div>`; });
+  dls.forEach(b=>{ if(sd.has(b.ji))return;sd.add(b.ji);
+    h+=`<div class="block dl-flag" style="border-color:${b.bg};color:${b.bg}" onclick="goToJob(${b.ji})">&#9873; ${esc(b.name)}</div>`;
+  });
   h += '</div></div>';
   return h;
 }
 
+// ── JOB LIST VIEW ──────────────────────────────────────────────────────────
 function renderJobList() {
   const el = document.getElementById('content');
   if (!jobs.length) { el.innerHTML='<div class="empty">No jobs yet.<br>Tap + Add Job to get started.</div>'; return; }
@@ -451,16 +535,21 @@ function renderJobList() {
 
   el.innerHTML = sorted.map(job => {
     const i = job.origIdx;
-    const color = COLORS[i%COLORS.length];
+    const col = jobColor(job);
     const status = job.deadline ? deadlineStatus(job.deadline) : null;
     const sched = getJobDays(job);
     const startDate = sched.length ? sched[sched.length-1].toLocaleDateString('en-NZ',{day:'numeric',month:'short'}) : '—';
+    const jobStatus = job.status || 'notstarted';
+    const statusLabel = jobStatus === 'complete' ? 'Complete' : jobStatus === 'inprogress' ? 'In Progress' : 'Not Started';
+    const statusBg = col.bg; const statusText = col.text;
 
-    return `<div class="job-card" id="jcard-${i}" style="border-left-color:${color}">
+    return `<div class="job-card" id="jcard-${i}" style="border-left-color:${col.bg}">
       <div id="jview-${i}">
+        <div class="job-status-badge" style="background:${statusBg};color:${statusText}">${statusLabel}</div>
         ${job.jobnum?`<div class="job-num">#${esc(job.jobnum)}</div>`:''}
         <div class="job-name">${esc(job.name)}</div>
-        <div class="job-dept">${esc(job.department||'')}</div>
+        ${job.department?`<div class="job-dept">${esc(job.department)}</div>`:''}
+        ${job.notes?`<div class="job-notes">${esc(job.notes)}</div>`:''}
         <div class="job-meta">
           ${job.days?`<span class="badge">${job.days}d</span>`:''}
           ${sched.length?`<span class="badge">starts ${startDate}</span>`:''}
@@ -473,12 +562,21 @@ function renderJobList() {
         </div>
       </div>
       <div class="edit-panel" id="epanel-${i}">
-        <div class="edit-label">Editing: ${esc(job.name)}</div>
-        <div class="edit-fields-full">
+        <div class="edit-heading">Editing: ${esc(job.name)}</div>
+
+        <div class="field-group">
           <div class="field-label">Job Number</div>
           <input type="text" id="enum-${i}" value="${esc(job.jobnum||'')}" placeholder="e.g. 2026-042" />
         </div>
-        <div class="edit-fields" style="margin-top:10px">
+        <div class="field-group">
+          <div class="field-label">Job Name</div>
+          <input type="text" id="ename-${i}" value="${esc(job.name||'')}" placeholder="Job name" />
+        </div>
+        <div class="field-group">
+          <div class="field-label">Department</div>
+          <input type="text" id="edept-${i}" value="${esc(job.department||'')}" placeholder="Department" />
+        </div>
+        <div class="field-row2" style="margin-bottom:14px">
           <div>
             <div class="field-label">Deadline</div>
             <input type="date" id="edl-${i}" value="${job.deadline||''}" />
@@ -488,76 +586,130 @@ function renderJobList() {
             <input type="number" id="edays-${i}" value="${job.days||''}" min="0.5" step="0.5" />
           </div>
         </div>
-        <div class="edit-btns">
-          <button class="edit-save" onclick="saveEdit(${i})">Save</button>
-          <button class="edit-cancel" onclick="cancelEdit(${i})">Cancel</button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+        <div class="field-group">
+          <div class="field-label">Notes</div>
+          <textarea id="enotes-${i}" placeholder="Any notes…">${esc(job.notes||'')}</textarea>
+
+```
+    </div>
+
+    <div class="field-label" style="margin-bottom:8px">Status</div>
+    <div class="status-radios">
+      <label class="status-radio s-notstarted">
+        <input type="radio" name="status-${i}" value="notstarted" ${jobStatus==='notstarted'?'checked':''} />
+        <div class="dot" style="background:#5b8dee"></div>
+        Not Started
+      </label>
+      <label class="status-radio s-inprogress">
+        <input type="radio" name="status-${i}" value="inprogress" ${jobStatus==='inprogress'?'checked':''} />
+        <div class="dot" style="background:#5bce8a"></div>
+        In Progress
+      </label>
+      <label class="status-radio s-complete">
+        <input type="radio" name="status-${i}" value="complete" ${jobStatus==='complete'?'checked':''} />
+        <div class="dot" style="background:#f0f0f8;border:1px solid #666"></div>
+        Complete
+      </label>
+    </div>
+
+    <div class="edit-btns">
+      <button class="edit-save" onclick="saveEdit(${i})">Save</button>
+      <button class="edit-cancel" onclick="cancelEdit(${i})">Cancel</button>
+    </div>
+  </div>
+</div>`;
+```
+
+}).join(’’);
 }
 
+// Navigate to a job card in Jobs tab
+function goToJob(ji) {
+setTab(‘jobs’);
+// Scroll to and highlight the job card
+setTimeout(() => {
+const card = document.getElementById(‘jcard-’+ji);
+if (card) {
+card.scrollIntoView({ behavior: ‘smooth’, block: ‘start’ });
+card.style.outline = ‘3px solid var(–accent)’;
+setTimeout(() => card.style.outline = ‘’, 1500);
+}
+}, 50);
+}
+
+// ── CRUD ───────────────────────────────────────────────────────────────────
 function addJob() {
-  const name = document.getElementById('f-name').value.trim();
-  const dept = document.getElementById('f-dept').value.trim();
-  const jobnum = document.getElementById('f-jobnum').value.trim();
-  const deadline = document.getElementById('f-deadline').value;
-  const days = parseFloat(document.getElementById('f-days').value);
-  if (!name) return alert('Please enter a job name.');
-  if (!deadline) return alert('Please set a deadline.');
-  if (!days||days<=0) return alert('Please enter number of days needed.');
-  jobs.push({name, department:dept, jobnum, deadline, days, created:new Date().toISOString()});
-  save();
-  ['f-name','f-dept','f-jobnum','f-deadline','f-days'].forEach(id=>document.getElementById(id).value='');
-  closeModal();
-  setTab('jobs');
+const name = document.getElementById(‘f-name’).value.trim();
+const dept = document.getElementById(‘f-dept’).value.trim();
+const jobnum = document.getElementById(‘f-jobnum’).value.trim();
+const deadline = document.getElementById(‘f-deadline’).value;
+const days = parseFloat(document.getElementById(‘f-days’).value);
+const notes = document.getElementById(‘f-notes’).value.trim();
+if (!name) return alert(‘Please enter a job name.’);
+if (!deadline) return alert(‘Please set a deadline.’);
+if (!days||days<=0) return alert(‘Please enter number of days needed.’);
+jobs.push({ name, department:dept, jobnum, deadline, days, notes, status:‘notstarted’, created:new Date().toISOString() });
+save();
+[‘f-name’,‘f-dept’,‘f-jobnum’,‘f-deadline’,‘f-days’,‘f-notes’].forEach(id=>document.getElementById(id).value=’’);
+closeModal();
+setTab(‘jobs’);
 }
 
 function deleteJob(i) {
-  if (!confirm('Delete "' + jobs[i].name + '"?')) return;
-  jobs.splice(i,1); save(); render();
+if (!confirm(‘Delete “’ + jobs[i].name + ‘”?’)) return;
+jobs.splice(i,1); save(); render();
 }
 
 function startEdit(i) {
-  document.getElementById('jview-'+i).style.display = 'none';
-  document.getElementById('epanel-'+i).style.display = 'block';
+document.getElementById(‘jview-’+i).style.display = ‘none’;
+document.getElementById(‘epanel-’+i).style.display = ‘block’;
 }
 
 function cancelEdit(i) {
-  document.getElementById('jview-'+i).style.display = 'block';
-  document.getElementById('epanel-'+i).style.display = 'none';
+document.getElementById(‘jview-’+i).style.display = ‘block’;
+document.getElementById(‘epanel-’+i).style.display = ‘none’;
 }
 
 function saveEdit(i) {
-  const dl = document.getElementById('edl-'+i).value;
-  const d = parseFloat(document.getElementById('edays-'+i).value);
-  const num = document.getElementById('enum-'+i).value.trim();
-  if (dl) jobs[i].deadline = dl;
-  if (d > 0) jobs[i].days = d;
-  jobs[i].jobnum = num;
-  save(); render();
+const name = document.getElementById(‘ename-’+i).value.trim();
+const dept = document.getElementById(‘edept-’+i).value.trim();
+const dl = document.getElementById(‘edl-’+i).value;
+const d = parseFloat(document.getElementById(‘edays-’+i).value);
+const num = document.getElementById(‘enum-’+i).value.trim();
+const notes = document.getElementById(‘enotes-’+i).value.trim();
+const statusEl = document.querySelector(`input[name="status-${i}"]:checked`);
+const status = statusEl ? statusEl.value : (jobs[i].status || ‘notstarted’);
+
+if (name) jobs[i].name = name;
+if (dept !== undefined) jobs[i].department = dept;
+if (dl) jobs[i].deadline = dl;
+if (d > 0) jobs[i].days = d;
+jobs[i].jobnum = num;
+jobs[i].notes = notes;
+jobs[i].status = status;
+save(); render();
 }
 
-function openModal() { document.getElementById('modal').classList.add('show'); }
-function closeModal() { document.getElementById('modal').classList.remove('show'); }
-function closeModalOutside(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+function openModal() { document.getElementById(‘modal’).classList.add(‘show’); }
+function closeModal() { document.getElementById(‘modal’).classList.remove(‘show’); }
+function closeModalOutside(e) { if (e.target === document.getElementById(‘modal’)) closeModal(); }
 
 function setTab(t) {
-  currentTab = t;
-  document.querySelectorAll('.tab').forEach((el,i) =>
-    el.classList.toggle('active', ['week','month','jobs'][i]===t));
-  render();
+currentTab = t;
+document.querySelectorAll(’.tab’).forEach((el,i) =>
+el.classList.toggle(‘active’, [‘week’,‘month’,‘jobs’][i]===t));
+render();
 }
 
 function prev() {
-  if (currentTab==='week') viewDate.setDate(viewDate.getDate()-7);
-  else viewDate.setMonth(viewDate.getMonth()-1);
-  render();
+if (currentTab===‘week’) viewDate.setDate(viewDate.getDate()-7);
+else viewDate.setMonth(viewDate.getMonth()-1);
+render();
 }
 function next() {
-  if (currentTab==='week') viewDate.setDate(viewDate.getDate()+7);
-  else viewDate.setMonth(viewDate.getMonth()+1);
-  render();
+if (currentTab===‘week’) viewDate.setDate(viewDate.getDate()+7);
+else viewDate.setMonth(viewDate.getMonth()+1);
+render();
 }
 function goToday() { viewDate = new Date(); render(); }
 

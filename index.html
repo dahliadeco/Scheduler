@@ -12,7 +12,7 @@
   --success: #6bde9a; --warn: #f5e070; --danger: #ff7a85; --orange: #ffaa55;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; }
 .topnav { background: var(--surface); border-bottom: 2px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 56px; position: sticky; top: 0; z-index: 100; }
 .logo { font-family: Consolas, 'Courier New', monospace; font-size: 15px; letter-spacing: 0.06em; color: var(--accent); font-weight: 700; }
 .logo span { color: var(--muted); font-weight: 400; }
@@ -23,88 +23,91 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .alert-banner { background: rgba(255,170,85,0.15); border-bottom: 2px solid rgba(255,170,85,0.5); padding: 12px 16px; display: none; }
 .alert-banner.show { display: block; }
 .alert-title { font-size: 13px; font-weight: 700; color: var(--orange); margin-bottom: 6px; }
-.alert-item { font-size: 13px; color: var(--text); padding: 4px 0; border-bottom: 1px solid rgba(255,170,85,0.2); cursor: pointer; }
-.alert-item:last-child { border-bottom: none; }
-.status-legend { display: flex; gap: 10px; flex-wrap: wrap; padding: 8px 14px; background: var(--surface); border-bottom: 1px solid var(--border); }
+.alert-item { font-size: 13px; color: var(--text); padding: 4px 0; cursor: pointer; border-bottom: 1px solid rgba(255,170,85,0.2); }
+.legend { display: flex; gap: 10px; flex-wrap: wrap; padding: 8px 14px; background: var(--surface); border-bottom: 1px solid var(--border); }
 .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); font-weight: 600; }
-.legend-dot { width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0; }
+.ldot { width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0; }
 .cal-nav { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
-.cal-nav-btn { background: var(--surface2); border: 2px solid var(--border); color: var(--text); width: 40px; height: 40px; border-radius: 8px; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-.cal-title { font-family: Consolas, 'Courier New', monospace; font-size: 14px; font-weight: 700; text-align: center; }
+.cnbtn { background: var(--surface2); border: 2px solid var(--border); color: var(--text); width: 40px; height: 40px; border-radius: 8px; font-size: 22px; cursor: pointer; }
+.cal-title { font-family: Consolas, 'Courier New', monospace; font-size: 14px; font-weight: 700; }
 .today-btn { background: var(--surface2); border: 2px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .content { padding: 12px 12px 100px; }
-.month-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-.day-header { font-size: 11px; font-weight: 700; color: var(--muted); text-align: center; padding: 6px 0; font-family: Consolas, monospace; }
-.day-cell { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; min-height: 68px; padding: 4px; position: relative; }
-.day-cell.other-month { opacity: 0.25; }
-.day-cell.weekend { background: rgba(255,255,255,0.02); }
-.day-cell.is-today { border: 2px solid var(--accent); }
-.day-cell.overbooked { border: 2px solid var(--danger) !important; }
-.day-num { font-family: Consolas, monospace; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
-.day-cell.is-today .day-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: var(--accent); color: #0f0f11; border-radius: 50%; font-size: 10px; font-weight: 700; }
-.day-blocks { display: flex; flex-direction: column; gap: 2px; }
-.m-block { font-size: 9px; padding: 2px 4px; border-radius: 3px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
-.m-block-dl { font-size: 9px; padding: 2px 4px; border-radius: 3px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; background: transparent !important; border: 2px solid; }
-.over-pip { position: absolute; top: 2px; right: 2px; font-size: 8px; font-family: Consolas, monospace; font-weight: 700; color: var(--danger); background: rgba(255,122,133,0.15); border: 1px solid rgba(255,122,133,0.4); border-radius: 3px; padding: 0 3px; }
-.week-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
-.week-col { display: flex; flex-direction: column; }
-.week-col-header { text-align: center; padding: 8px 2px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px 6px 0 0; border-bottom: none; }
-.week-col-header.is-today { border: 2px solid var(--accent); border-bottom: none; }
+.err { background: #ff7a8533; border: 2px solid #ff7a85; border-radius: 8px; padding: 16px; margin: 16px; font-size: 13px; color: #ff7a85; font-family: Consolas, monospace; white-space: pre-wrap; }
+/* MONTH */
+.mgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.dh { font-size: 11px; font-weight: 700; color: var(--muted); text-align: center; padding: 6px 0; }
+.dc { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; min-height: 68px; padding: 4px; position: relative; }
+.dc.om { opacity: 0.25; }
+.dc.we { background: rgba(255,255,255,0.02); }
+.dc.td { border: 2px solid var(--accent); }
+.dc.ob { border: 2px solid var(--danger) !important; }
+.dn { font-family: Consolas, monospace; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+.dc.td .dn { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: var(--accent); color: #0f0f11; border-radius: 50%; font-size: 10px; font-weight: 700; }
+.dblocks { display: flex; flex-direction: column; gap: 2px; }
+.mb { font-size: 9px; padding: 2px 4px; border-radius: 3px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; color: #111; }
+.mbdl { font-size: 9px; padding: 2px 4px; border-radius: 3px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; background: transparent; border: 2px solid; }
+.opip { position: absolute; top: 2px; right: 2px; font-size: 8px; font-weight: 700; color: var(--danger); background: rgba(255,122,133,0.15); border: 1px solid rgba(255,122,133,0.4); border-radius: 3px; padding: 0 3px; }
+/* WEEK */
+.wgrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.wcol { display: flex; flex-direction: column; }
+.wch { text-align: center; padding: 8px 2px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px 6px 0 0; border-bottom: none; }
+.wch.td { border: 2px solid var(--accent); border-bottom: none; }
 .wday { font-family: Consolas, monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); }
 .wdate { font-family: Consolas, monospace; font-size: 20px; font-weight: 700; }
-.week-col-header.is-today .wdate { color: var(--accent); }
-.week-col-body { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 6px 6px; padding: 6px 5px; display: flex; flex-direction: column; gap: 4px; min-height: 200px; }
-.week-col-body.is-today { border: 2px solid var(--accent); border-top: none; }
-.week-col-body.is-over { border-color: var(--danger); }
-.w-block { padding: 6px; border-radius: 4px; font-size: 11px; font-weight: 700; line-height: 1.4; cursor: pointer; }
-.w-block-dl { padding: 5px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; background: transparent !important; border: 2px solid; }
-.wb-num { font-size: 9px; opacity: 0.75; font-weight: 600; }
-.wb-name { font-size: 11px; font-weight: 700; }
-.wb-dept { font-size: 10px; opacity: 0.75; margin-top: 1px; }
-.week-over-warn { font-size: 10px; color: var(--danger); margin-top: 3px; font-weight: 700; }
-.span-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 4px; margin-bottom: 4px; }
-.span-block { padding: 6px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; line-height: 1.4; cursor: pointer; min-height: 44px; }
-.job-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; border-left: 4px solid; }
-.job-status-badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 5px; margin-bottom: 10px; }
-.job-num { font-family: Consolas, monospace; font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
-.job-name { font-weight: 700; font-size: 18px; line-height: 1.3; }
-.job-dept { font-size: 14px; color: var(--muted); margin-top: 3px; }
-.job-notes { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.5; font-style: italic; }
-.job-meta { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.wch.td .wdate { color: var(--accent); }
+.wcb { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 0 0 6px 6px; padding: 6px 5px; min-height: 200px; }
+.wcb.td { border: 2px solid var(--accent); border-top: none; }
+.wcb.ov { border-color: var(--danger); }
+.wb { padding: 6px; border-radius: 4px; font-size: 11px; font-weight: 700; line-height: 1.4; cursor: pointer; margin-bottom: 4px; color: #111; }
+.wbdl { padding: 5px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; background: transparent; border: 2px solid; margin-bottom: 4px; }
+.wbn { font-size: 9px; opacity: 0.75; font-weight: 600; }
+.wbname { font-size: 11px; font-weight: 700; }
+.wbdept { font-size: 10px; opacity: 0.75; margin-top: 1px; }
+.wovw { font-size: 10px; color: var(--danger); font-weight: 700; margin-bottom: 4px; }
+.srow { display: grid; grid-template-columns: repeat(5,1fr); gap: 4px; margin-bottom: 4px; }
+.sblock { padding: 6px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; line-height: 1.4; cursor: pointer; min-height: 44px; color: #111; }
+/* JOBS */
+.jcard { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; border-left: 4px solid; }
+.jsbadge { display: inline-block; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 5px; margin-bottom: 10px; }
+.jnum { font-family: Consolas, monospace; font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+.jname { font-weight: 700; font-size: 18px; line-height: 1.3; }
+.jdept { font-size: 14px; color: var(--muted); margin-top: 3px; }
+.jnotes { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.5; font-style: italic; }
+.jmeta { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
 .badge { font-family: Consolas, monospace; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 4px; background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
-.badge-warn { background: rgba(245,224,112,0.15); color: var(--warn); border-color: rgba(245,224,112,0.4); }
-.badge-danger { background: rgba(255,122,133,0.15); color: var(--danger); border-color: rgba(255,122,133,0.4); }
-.badge-ok { background: rgba(107,222,154,0.15); color: var(--success); border-color: rgba(107,222,154,0.4); }
-.job-due { font-size: 13px; color: var(--muted); margin-top: 8px; font-weight: 600; }
-.job-btns { display: flex; gap: 10px; margin-top: 14px; }
+.bw { background: rgba(245,224,112,0.15); color: var(--warn); border-color: rgba(245,224,112,0.4); }
+.bd { background: rgba(255,122,133,0.15); color: var(--danger); border-color: rgba(255,122,133,0.4); }
+.bo { background: rgba(107,222,154,0.15); color: var(--success); border-color: rgba(107,222,154,0.4); }
+.jdue { font-size: 13px; color: var(--muted); margin-top: 8px; font-weight: 600; }
+.jbtns { display: flex; gap: 10px; margin-top: 14px; }
 .jbtn { flex: 1; padding: 13px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; text-align: center; }
-.jbtn-edit { background: var(--surface2); color: var(--text); border: 2px solid var(--border); }
-.jbtn-del { background: rgba(255,122,133,0.15); color: var(--danger); border: 2px solid rgba(255,122,133,0.4); }
-.edit-panel { display: none; margin-top: 14px; padding-top: 14px; border-top: 2px solid var(--border); }
-.edit-heading { font-size: 14px; color: var(--accent); font-weight: 700; margin-bottom: 14px; }
-.field-grp { margin-bottom: 14px; }
-.field-lbl { font-size: 12px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-.field-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-input[type="date"], input[type="number"], input[type="text"], textarea { background: var(--bg); border: 2px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 16px; width: 100%; -webkit-appearance: none; appearance: none; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.jbedit { background: var(--surface2); color: var(--text); border: 2px solid var(--border); }
+.jbdel { background: rgba(255,122,133,0.15); color: var(--danger); border: 2px solid rgba(255,122,133,0.4); }
+.epanel { display: none; margin-top: 14px; padding-top: 14px; border-top: 2px solid var(--border); }
+.ehead { font-size: 14px; color: var(--accent); font-weight: 700; margin-bottom: 14px; }
+.fgrp { margin-bottom: 14px; }
+.flbl { font-size: 12px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.fr2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+input[type="date"], input[type="number"], input[type="text"], textarea { background: var(--bg); border: 2px solid var(--border); color: var(--text); padding: 12px 14px; border-radius: 8px; font-size: 16px; width: 100%; -webkit-appearance: none; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
 textarea { resize: vertical; min-height: 80px; }
 input:focus, textarea:focus { outline: none; border-color: var(--accent); }
 input::placeholder, textarea::placeholder { color: var(--muted); }
-.status-radios { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-.status-radio { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 8px; border: 2px solid var(--border); cursor: pointer; font-size: 15px; font-weight: 600; }
-.status-radio input[type="radio"] { width: 20px; height: 20px; accent-color: var(--accent); flex-shrink: 0; }
-.s-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
-.edit-btns { display: flex; gap: 10px; }
-.edit-save { flex: 2; background: var(--accent); color: #0f0f11; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; }
-.edit-cancel { flex: 1; background: transparent; border: 2px solid var(--border); color: var(--muted); padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: flex-end; }
-.modal-overlay.show { display: flex; }
-.modal { background: var(--surface); border-radius: 20px 20px 0 0; padding: 24px 18px 50px; width: 100%; position: relative; max-height: 92vh; overflow-y: auto; }
-.modal-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
-.modal-field { margin-bottom: 16px; }
-.modal-lbl { font-size: 13px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-.modal-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-.modal-add { width: 100%; background: var(--accent); color: #0f0f11; border: none; padding: 16px; border-radius: 10px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 6px; }
-.modal-close { position: absolute; top: 18px; right: 18px; background: var(--surface2); border: 2px solid var(--border); color: var(--muted); width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.sradios { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.sradio { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 8px; border: 2px solid var(--border); cursor: pointer; font-size: 15px; font-weight: 600; }
+.sradio input[type="radio"] { width: 20px; height: 20px; flex-shrink: 0; }
+.sdot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+.ebtns { display: flex; gap: 10px; }
+.esave { flex: 2; background: var(--accent); color: #0f0f11; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.ecancel { flex: 1; background: transparent; border: 2px solid var(--border); color: var(--muted); padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
+.moverlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: flex-end; }
+.moverlay.show { display: flex; }
+.mbox { background: var(--surface); border-radius: 20px 20px 0 0; padding: 24px 18px 50px; width: 100%; position: relative; max-height: 92vh; overflow-y: auto; }
+.mtitle { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+.mfield { margin-bottom: 16px; }
+.mlbl { font-size: 13px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.mr2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.madd { width: 100%; background: var(--accent); color: #0f0f11; border: none; padding: 16px; border-radius: 10px; font-size: 17px; font-weight: 700; cursor: pointer; margin-top: 6px; }
+.mclose { position: absolute; top: 18px; right: 18px; background: var(--surface2); border: 2px solid var(--border); color: var(--muted); width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; }
 .empty { text-align: center; color: var(--muted); padding: 50px 20px; font-size: 16px; line-height: 1.7; }
 </style>
 </head>
@@ -118,460 +121,448 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
   <div class="tab active" onclick="setTab('month')">Month</div>
   <div class="tab" onclick="setTab('jobs')">Jobs</div>
 </div>
-<div class="alert-banner" id="alert-banner">
-  <div class="alert-title">&#9888; Jobs that should have started - tap to update status:</div>
-  <div id="alert-items"></div>
+<div class="alert-banner" id="abanner">
+  <div class="alert-title">&#9888; Jobs that should have started - tap to update:</div>
+  <div id="aitems"></div>
 </div>
-<div class="status-legend" id="status-legend">
-  <div class="legend-item"><div class="legend-dot" style="background:#5b8dee"></div>Not started</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#5bce8a"></div>In progress</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#f0f0f8;border:1px solid #666"></div>Complete</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#ffaa55"></div>Overdue start</div>
+<div class="legend" id="legend">
+  <div class="legend-item"><div class="ldot" style="background:#5b8dee"></div>Not started</div>
+  <div class="legend-item"><div class="ldot" style="background:#5bce8a"></div>In progress</div>
+  <div class="legend-item"><div class="ldot" style="background:#f0f0f8;border:1px solid #666"></div>Complete</div>
+  <div class="legend-item"><div class="ldot" style="background:#ffaa55"></div>Overdue start</div>
 </div>
-<div class="cal-nav" id="cal-nav">
-  <button class="cal-nav-btn" onclick="prev()">&#8249;</button>
-  <div class="cal-title" id="cal-title">Loading...</div>
-  <div style="display:flex;gap:8px;align-items:center">
+<div class="cal-nav" id="calnav">
+  <button class="cnbtn" onclick="prev()">&#8249;</button>
+  <div class="cal-title" id="caltitle">Loading...</div>
+  <div style="display:flex;gap:8px;align-items:center;">
     <button class="today-btn" onclick="goToday()">Today</button>
-    <button class="cal-nav-btn" onclick="next()">&#8250;</button>
+    <button class="cnbtn" onclick="next()">&#8250;</button>
   </div>
 </div>
 <div class="content" id="content"></div>
-<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">&#x2715;</button>
-    <div class="modal-title">Add Job</div>
-    <div class="modal-field"><div class="modal-lbl">Job Number</div><input type="text" id="f-jobnum" placeholder="e.g. 2026-042" /></div>
-    <div class="modal-field"><div class="modal-lbl">Job Name</div><input type="text" id="f-name" placeholder="Annual Report cover..." /></div>
-    <div class="modal-field"><div class="modal-lbl">Department</div><input type="text" id="f-dept" placeholder="e.g. Parks and Recreation" /></div>
-    <div class="modal-row2">
-      <div><div class="modal-lbl">Deadline</div><input type="date" id="f-deadline" /></div>
-      <div><div class="modal-lbl">Days needed</div><input type="number" id="f-days" placeholder="3" min="0.5" step="0.5" /></div>
+<div class="moverlay" id="modal" onclick="closeModalBg(event)">
+  <div class="mbox">
+    <button class="mclose" onclick="closeModal()">&#x2715;</button>
+    <div class="mtitle">Add Job</div>
+    <div class="mfield"><div class="mlbl">Job Number</div><input type="text" id="fn" placeholder="e.g. 2026-042"/></div>
+    <div class="mfield"><div class="mlbl">Job Name</div><input type="text" id="fname" placeholder="Annual Report cover..."/></div>
+    <div class="mfield"><div class="mlbl">Department</div><input type="text" id="fdept" placeholder="e.g. Parks and Recreation"/></div>
+    <div class="mr2">
+      <div><div class="mlbl">Deadline</div><input type="date" id="fdl"/></div>
+      <div><div class="mlbl">Days needed</div><input type="number" id="fdays" placeholder="3" min="0.5" step="0.5"/></div>
     </div>
-    <div class="modal-field"><div class="modal-lbl">Notes</div><textarea id="f-notes" placeholder="Any notes about this job..."></textarea></div>
-    <button class="modal-add" onclick="addJob()">+ Add Job</button>
+    <div class="mfield"><div class="mlbl">Notes</div><textarea id="fnotes" placeholder="Any notes..."></textarea></div>
+    <button class="madd" onclick="addJob()">+ Add Job</button>
   </div>
 </div>
-
 <script>
-var jobs = JSON.parse(localStorage.getItem('ds6-jobs') || '[]');
-var viewDate = new Date();
-var currentTab = 'month';
+var JOBS = JSON.parse(localStorage.getItem('ds7') || '[]');
+var VD = new Date();
+var TAB = 'month';
+var COLORS = ['#5b8dee','#e8925b','#5bce8a','#c45bee','#e8d45b','#e85b6a','#5beee8','#ee5bb8','#a3ee5b','#ee8b5b','#5bb8ee','#ee5b5b','#5beebc','#d4ee5b','#b05bee'];
 
-function save() { localStorage.setItem('ds6-jobs', JSON.stringify(jobs)); }
+function save() { try { localStorage.setItem(‘ds7’, JSON.stringify(JOBS)); } catch(e) {} }
 
-function escHtml(s) {
-  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+function H(s) {
+var r = String(s || ‘’);
+r = r.replace(/&/g,’&’);
+r = r.replace(/</g,’<’);
+r = r.replace(/>/g,’>’);
+r = r.replace(/”/g,’"’);
+return r;
 }
 
-function makeDateKey(d) {
-  var y = d.getFullYear();
-  var mo = d.getMonth() + 1;
-  var dy = d.getDate();
-  return y + '-' + (mo < 10 ? '0' + mo : mo) + '-' + (dy < 10 ? '0' + dy : dy);
+function dk(d) {
+var y = d.getFullYear();
+var m = d.getMonth() + 1;
+var dy = d.getDate();
+return y + ‘-’ + (m < 10 ? ‘0’+m : ‘’+m) + ‘-’ + (dy < 10 ? ‘0’+dy : ‘’+dy);
 }
 
-function getTodayKey() { return makeDateKey(new Date()); }
+function isWD(d) { var w = d.getDay(); return w !== 0 && w !== 6; }
 
-function isWorkDay(d) { var w = d.getDay(); return w !== 0 && w !== 6; }
-
-function getWeekMonday(d) {
-  var c = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  var dow = c.getDay();
-  c.setDate(c.getDate() + (dow === 0 ? -6 : 1 - dow));
-  return c;
+function monday(d) {
+var y = d.getFullYear(), m = d.getMonth(), dd = d.getDate();
+var c = new Date(y, m, dd);
+var dow = c.getDay();
+if (dow === 0) c.setDate(dd - 6);
+else c.setDate(dd - (dow - 1));
+return c;
 }
 
-function formatDate(dl) {
-  var d = new Date(dl + 'T00:00:00');
-  return d.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' });
+function jdays(job) {
+if (!job.deadline || !job.days) return [];
+var parts = job.deadline.split(’-’);
+var dl = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+var rem = parseFloat(job.days);
+var res = [];
+var c = new Date(dl.getFullYear(), dl.getMonth(), dl.getDate());
+var lim = new Date(dl.getFullYear()-5, 0, 1);
+while (rem > 0 && c >= lim) {
+if (isWD(c)) { res.push(new Date(c.getFullYear(), c.getMonth(), c.getDate())); rem = rem - 1; }
+if (rem > 0) c.setDate(c.getDate() - 1);
+}
+return res;
 }
 
-function getJobDays(job) {
-  if (!job.deadline || !job.days) return [];
-  var deadline = new Date(job.deadline + 'T00:00:00');
-  var rem = Number(job.days);
-  var result = [];
-  var cur = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
-  var limit = new Date(deadline.getFullYear() - 5, 0, 1);
-  while (rem > 0 && cur >= limit) {
-    if (isWorkDay(cur)) { result.push(new Date(cur)); rem--; }
-    if (rem > 0) cur.setDate(cur.getDate() - 1);
-  }
-  return result;
+function jcol(job) {
+var now = new Date(); now.setHours(0,0,0,0);
+var st = job.status || ‘notstarted’;
+if (st === ‘complete’) return {bg:’#f0f0f8’, fg:’#111111’};
+if (st === ‘inprogress’) return {bg:’#5bce8a’, fg:’#111111’};
+var sd = jdays(job);
+var start = sd.length ? sd[sd.length-1] : null;
+if (start && start < now) return {bg:’#ffaa55’, fg:’#111111’};
+return {bg:’#5b8dee’, fg:’#111111’};
 }
 
-function getJobColor(job) {
-  var today = new Date(); today.setHours(0, 0, 0, 0);
-  var status = job.status || 'notstarted';
-  if (status === 'complete') return { bg: '#f0f0f8', fg: '#111111' };
-  if (status === 'inprogress') return { bg: '#5bce8a', fg: '#111111' };
-  var sched = getJobDays(job);
-  var startDate = sched.length ? sched[sched.length - 1] : null;
-  if (startDate && startDate < today) return { bg: '#ffaa55', fg: '#111111' };
-  return { bg: '#5b8dee', fg: '#111111' };
+function dlst(dl) {
+var now = new Date(); now.setHours(0,0,0,0);
+var parts = dl.split(’-’);
+var d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+var diff = Math.round((d.getTime() - now.getTime()) / 86400000);
+if (diff < 0) return {label:‘OVERDUE’, cls:‘bd’};
+if (diff === 0) return {label:‘DUE TODAY’, cls:‘bd’};
+if (diff <= 7) return {label:diff+‘d left’, cls:‘bw’};
+return {label:diff+‘d left’, cls:‘bo’};
 }
 
-function getDeadlineStatus(dl) {
-  var today = new Date(); today.setHours(0, 0, 0, 0);
-  var d = new Date(dl + 'T00:00:00');
-  var diff = Math.round((d - today) / 86400000);
-  if (diff < 0) return { label: 'OVERDUE', cls: 'badge-danger' };
-  if (diff === 0) return { label: 'DUE TODAY', cls: 'badge-danger' };
-  if (diff <= 7) return { label: diff + 'd left', cls: 'badge-warn' };
-  return { label: diff + 'd left', cls: 'badge-ok' };
+function fdate(dl) {
+var parts = dl.split(’-’);
+var d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+return d.toLocaleDateString(‘en-NZ’, {day:‘numeric’, month:‘short’, year:‘numeric’});
 }
 
-function buildScheduleMap() {
-  var map = {};
-  var ji, job, col, days, dk, k;
-  for (ji = 0; ji < jobs.length; ji++) {
-    job = jobs[ji];
-    col = getJobColor(job);
-    days = getJobDays(job);
-    for (dk = 0; dk < days.length; dk++) {
-      k = makeDateKey(days[dk]);
-      if (!map[k]) map[k] = [];
-      map[k].push({ ji: ji, name: job.name, jobnum: job.jobnum || '', dept: job.department || '', bg: col.bg, fg: col.fg, dl: false });
-    }
-    if (job.deadline) {
-      k = job.deadline;
-      if (!map[k]) map[k] = [];
-      map[k].push({ ji: ji, name: job.name, jobnum: job.jobnum || '', dept: job.department || '', bg: col.bg, fg: col.fg, dl: true });
-    }
-  }
-  return map;
+function bmap() {
+var map = {};
+var i, job, col, days, dk2, k;
+for (i = 0; i < JOBS.length; i++) {
+job = JOBS[i];
+col = jcol(job);
+days = jdays(job);
+for (dk2 = 0; dk2 < days.length; dk2++) {
+k = dk(days[dk2]);
+if (!map[k]) map[k] = [];
+map[k].push({i:i, name:job.name||’’, num:job.jobnum||’’, dept:job.department||’’, bg:col.bg, fg:col.fg, dl:false});
+}
+if (job.deadline) {
+k = job.deadline;
+if (!map[k]) map[k] = [];
+map[k].push({i:i, name:job.name||’’, num:job.jobnum||’’, dept:job.department||’’, bg:col.bg, fg:col.fg, dl:true});
+}
+}
+return map;
 }
 
 function checkAlerts() {
-  var today = new Date(); today.setHours(0, 0, 0, 0);
-  var banner = document.getElementById('alert-banner');
-  var itemsEl = document.getElementById('alert-items');
-  var html = '';
-  var ji, job, sched, startDate;
-  for (ji = 0; ji < jobs.length; ji++) {
-    job = jobs[ji];
-    if ((job.status || 'notstarted') !== 'notstarted') continue;
-    sched = getJobDays(job);
-    startDate = sched.length ? sched[sched.length - 1] : null;
-    if (startDate && startDate < today) {
-      html += '<div class="alert-item" onclick="goToJob(' + ji + ')">' + (job.jobnum ? '#' + escHtml(job.jobnum) + ' - ' : '') + escHtml(job.name) + ' - tap to update</div>';
-    }
-  }
-  if (html) { banner.classList.add('show'); itemsEl.innerHTML = html; }
-  else { banner.classList.remove('show'); itemsEl.innerHTML = ''; }
+var now = new Date(); now.setHours(0,0,0,0);
+var banner = document.getElementById(‘abanner’);
+var ael = document.getElementById(‘aitems’);
+var h = ‘’, i, job, sd, start;
+for (i = 0; i < JOBS.length; i++) {
+job = JOBS[i];
+if ((job.status||‘notstarted’) !== ‘notstarted’) continue;
+sd = jdays(job);
+start = sd.length ? sd[sd.length-1] : null;
+if (start && start.getTime() < now.getTime()) {
+h += ‘<div class="alert-item" onclick="goJob('+i+')">’+(job.jobnum?’#’+H(job.jobnum)+’ - ‘:’’)+H(job.name)+’ - tap to update</div>’;
+}
+}
+if (h) { banner.className=‘alert-banner show’; ael.innerHTML=h; }
+else { banner.className=‘alert-banner’; ael.innerHTML=’’; }
 }
 
 function render() {
-  checkAlerts();
-  var calNav = document.getElementById('cal-nav');
-  var legend = document.getElementById('status-legend');
-  var isJobs = (currentTab === 'jobs');
-  calNav.style.display = isJobs ? 'none' : 'flex';
-  legend.style.display = isJobs ? 'none' : 'flex';
-  if (currentTab === 'week') renderWeek();
-  else if (currentTab === 'month') renderMonth();
-  else renderJobList();
+try {
+checkAlerts();
+var cn = document.getElementById(‘calnav’);
+var lg = document.getElementById(‘legend’);
+if (TAB === ‘jobs’) { cn.style.display=‘none’; lg.style.display=‘none’; renderJobs(); }
+else { cn.style.display=‘flex’; lg.style.display=‘flex’; if (TAB===‘week’) renderWeek(); else renderMonth(); }
+} catch(e) {
+document.getElementById(‘content’).innerHTML = ‘<div class="err">Error: ‘+H(e.message)+’</div>’;
+}
 }
 
 function renderMonth() {
-  var y = viewDate.getFullYear();
-  var m = viewDate.getMonth();
-  document.getElementById('cal-title').textContent = new Date(y, m, 1).toLocaleString('default', { month: 'long', year: 'numeric' });
-  var map = buildScheduleMap();
-  var today = getTodayKey();
-  var firstDow = new Date(y, m, 1).getDay();
-  var daysInMonth = new Date(y, m + 1, 0).getDate();
-  var html = '<div class="month-grid">';
-  var headers = ['S','M','T','W','T','F','S'];
-  var hi;
-  for (hi = 0; hi < headers.length; hi++) html += '<div class="day-header">' + headers[hi] + '</div>';
-  var pi, di, ti;
-  for (pi = 0; pi < firstDow; pi++) html += buildMonthCell(new Date(y, m, 1 - (firstDow - pi)), map, today, true);
-  for (di = 1; di <= daysInMonth; di++) html += buildMonthCell(new Date(y, m, di), map, today, false);
-  var trail = (7 - ((firstDow + daysInMonth) % 7)) % 7;
-  for (ti = 1; ti <= trail; ti++) html += buildMonthCell(new Date(y, m + 1, ti), map, today, true);
-  html += '</div>';
-  document.getElementById('content').innerHTML = html;
+var y = VD.getFullYear(), m = VD.getMonth();
+var months = [‘January’,‘February’,‘March’,‘April’,‘May’,‘June’,‘July’,‘August’,‘September’,‘October’,‘November’,‘December’];
+document.getElementById(‘caltitle’).textContent = months[m] + ’ ’ + y;
+var map = bmap();
+var todayk = dk(new Date());
+var firstDow = new Date(y, m, 1).getDay();
+var dim = new Date(y, m+1, 0).getDate();
+var h = ‘<div class="mgrid"><div class="dh">S</div><div class="dh">M</div><div class="dh">T</div><div class="dh">W</div><div class="dh">T</div><div class="dh">F</div><div class="dh">S</div>’;
+var pi, di, ti;
+for (pi = 0; pi < firstDow; pi++) {
+var pd = new Date(y, m, 1-(firstDow-pi));
+h += mcell(pd, map, todayk, true);
+}
+for (di = 1; di <= dim; di++) h += mcell(new Date(y, m, di), map, todayk, false);
+var trail = (7 - ((firstDow + dim) % 7)) % 7;
+for (ti = 1; ti <= trail; ti++) h += mcell(new Date(y, m+1, ti), map, todayk, true);
+h += ‘</div>’;
+document.getElementById(‘content’).innerHTML = h;
 }
 
-function buildMonthCell(date, map, today, other) {
-  var k = makeDateKey(date);
-  var all = map[k] || [];
-  var work = [], dls = [], ai, b;
-  for (ai = 0; ai < all.length; ai++) { b = all[ai]; if (b.dl) dls.push(b); else work.push(b); }
-  var seenW = {}, seenD = {};
-  var jobCount = 0;
-  for (ai = 0; ai < work.length; ai++) { if (!seenW[work[ai].ji]) { seenW[work[ai].ji] = 1; jobCount++; } }
-  seenW = {};
-  var isToday = (k === today);
-  var dow = date.getDay();
-  var cls = 'day-cell';
-  if (other) cls += ' other-month';
-  if (dow === 0 || dow === 6) cls += ' weekend';
-  if (isToday) cls += ' is-today';
-  if (jobCount > 1 && !other) cls += ' overbooked';
-  var h = '<div class="' + cls + '"><div class="day-num">' + date.getDate() + '</div>';
-  if (jobCount > 1) h += '<div class="over-pip">' + jobCount + '</div>';
-  h += '<div class="day-blocks">';
-  for (ai = 0; ai < work.length; ai++) {
-    b = work[ai];
-    if (seenW[b.ji]) continue; seenW[b.ji] = 1;
-    h += '<div class="m-block" style="background:' + b.bg + ';color:' + b.fg + '" onclick="goToJob(' + b.ji + ')">' + escHtml(b.name) + '</div>';
-  }
-  for (ai = 0; ai < dls.length; ai++) {
-    b = dls[ai];
-    if (seenD[b.ji]) continue; seenD[b.ji] = 1;
-    h += '<div class="m-block-dl" style="border-color:' + b.bg + ';color:' + b.bg + '" onclick="goToJob(' + b.ji + ')">&#9873; ' + escHtml(b.name) + '</div>';
-  }
-  h += '</div></div>';
-  return h;
+function mcell(date, map, todayk, other) {
+var k = dk(date);
+var all = map[k] || [];
+var work = [], dls = [], ai, b;
+for (ai = 0; ai < all.length; ai++) { b = all[ai]; if (b.dl) dls.push(b); else work.push(b); }
+var seen = {}, jc = 0, si;
+for (si = 0; si < work.length; si++) { if (!seen[work[si].i]) { seen[work[si].i]=1; jc++; } }
+var isT = (k === todayk), dow = date.getDay();
+var cls = ‘dc’;
+if (other) cls += ’ om’;
+if (dow===0||dow===6) cls += ’ we’;
+if (isT) cls += ’ td’;
+if (jc > 1 && !other) cls += ’ ob’;
+var h = ‘<div class="'+cls+'"><div class="dn">’+date.getDate()+’</div>’;
+if (jc > 1) h += ‘<div class="opip">’+jc+’</div>’;
+h += ‘<div class="dblocks">’;
+var sw = {}, sd2 = {};
+for (si = 0; si < work.length; si++) {
+b = work[si];
+if (sw[b.i]) continue; sw[b.i]=1;
+h += ‘<div class="mb" style="background:'+b.bg+';color:'+b.fg+';" onclick="goJob('+b.i+')">’+H(b.name)+’</div>’;
+}
+for (si = 0; si < dls.length; si++) {
+b = dls[si];
+if (sd2[b.i]) continue; sd2[b.i]=1;
+h += ‘<div class="mbdl" style="border-color:'+b.bg+';color:'+b.bg+';" onclick="goJob('+b.i+')">⚑ ‘+H(b.name)+’</div>’;
+}
+h += ‘</div></div>’;
+return h;
 }
 
 function renderWeek() {
-  var ws = getWeekMonday(viewDate);
-  var we = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + 4);
-  document.getElementById('cal-title').textContent =
-    ws.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short' }) + ' - ' +
-    we.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' });
-  var map = buildScheduleMap();
-  var today = getTodayKey();
-  var dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-  var weekDates = [], weekKeys = [], wi;
-  for (wi = 0; wi < 5; wi++) {
-    var wd = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + wi);
-    weekDates.push(wd);
-    weekKeys.push(makeDateKey(wd));
-  }
-  var jobDayIdx = {}, jiStr, cols, di2, blocks, bi2, b2, consecutive, ci;
-  for (di2 = 0; di2 < weekKeys.length; di2++) {
-    blocks = map[weekKeys[di2]] || [];
-    for (bi2 = 0; bi2 < blocks.length; bi2++) {
-      b2 = blocks[bi2];
-      if (b2.dl) continue;
-      jiStr = String(b2.ji);
-      if (!jobDayIdx[jiStr]) jobDayIdx[jiStr] = [];
-      jobDayIdx[jiStr].push(di2);
-    }
-  }
-  var spanningJis = {};
-  var jKeys = Object.keys(jobDayIdx);
-  for (var jki = 0; jki < jKeys.length; jki++) {
-    jiStr = jKeys[jki];
-    cols = jobDayIdx[jiStr].slice().sort(function(a, b) { return a - b; });
-    if (cols.length < 2) continue;
-    consecutive = true;
-    for (ci = 1; ci < cols.length; ci++) { if (cols[ci] !== cols[ci - 1] + 1) { consecutive = false; break; } }
-    if (consecutive) spanningJis[jiStr] = cols;
-  }
-  var html = '';
-  var sKeys = Object.keys(spanningJis);
-  var ski, ji2, sc, startCol, span, si;
-  for (ski = 0; ski < sKeys.length; ski++) {
-    jiStr = sKeys[ski];
-    ji2 = parseInt(jiStr);
-    sc = spanningJis[jiStr];
-    var sjob = jobs[ji2];
-    var scol = getJobColor(sjob);
-    startCol = sc[0]; span = sc.length;
-    html += '<div class="span-row">';
-    for (si = 0; si < startCol; si++) html += '<div></div>';
-    html += '<div style="grid-column:span ' + span + '"><div class="span-block" style="background:' + scol.bg + ';color:' + scol.fg + '" onclick="goToJob(' + ji2 + ')">';
-    if (sjob.jobnum) html += '<div class="wb-num">#' + escHtml(sjob.jobnum) + '</div>';
-    html += '<div class="wb-name">' + escHtml(sjob.name) + '</div>';
-    if (sjob.department) html += '<div class="wb-dept">' + escHtml(sjob.department) + '</div>';
-    html += '</div></div>';
-    for (si = startCol + span; si < 5; si++) html += '<div></div>';
-    html += '</div>';
-  }
-  html += '<div class="week-grid">';
-  var wai, wb, allWork, awai, jobCount2, seenWW, seenDD, isToday2, all2, work2, dls2;
-  for (wi = 0; wi < 5; wi++) {
-    var wdate = weekDates[wi];
-    var wkey = weekKeys[wi];
-    isToday2 = (wkey === today);
-    all2 = map[wkey] || [];
-    work2 = []; dls2 = [];
-    for (wai = 0; wai < all2.length; wai++) {
-      wb = all2[wai];
-      if (wb.dl) dls2.push(wb);
-      else if (!spanningJis[String(wb.ji)]) work2.push(wb);
-    }
-    allWork = [];
-    for (wai = 0; wai < all2.length; wai++) { if (!all2[wai].dl) allWork.push(all2[wai]); }
-    seenWW = {}; jobCount2 = 0;
-    for (wai = 0; wai < allWork.length; wai++) { if (!seenWW[allWork[wai].ji]) { seenWW[allWork[wai].ji] = 1; jobCount2++; } }
-    seenWW = {}; seenDD = {};
-    html += '<div class="week-col">';
-    html += '<div class="week-col-header' + (isToday2 ? ' is-today' : '') + '"><div class="wday">' + dayNames[wi] + '</div><div class="wdate">' + wdate.getDate() + '</div></div>';
-    html += '<div class="week-col-body' + (isToday2 ? ' is-today' : '') + (jobCount2 > 1 ? ' is-over' : '') + '">';
-    for (wai = 0; wai < work2.length; wai++) {
-      wb = work2[wai];
-      if (seenWW[wb.ji]) continue; seenWW[wb.ji] = 1;
-      html += '<div class="w-block" style="background:' + wb.bg + ';color:' + wb.fg + '" onclick="goToJob(' + wb.ji + ')">';
-      if (wb.jobnum) html += '<div class="wb-num">#' + escHtml(wb.jobnum) + '</div>';
-      html += '<div class="wb-name">' + escHtml(wb.name) + '</div>';
-      if (wb.dept) html += '<div class="wb-dept">' + escHtml(wb.dept) + '</div>';
-      html += '</div>';
-    }
-    if (jobCount2 > 1) html += '<div class="week-over-warn">&#9888; ' + jobCount2 + ' jobs</div>';
-    for (wai = 0; wai < dls2.length; wai++) {
-      wb = dls2[wai];
-      if (seenDD[wb.ji]) continue; seenDD[wb.ji] = 1;
-      html += '<div class="w-block-dl" style="border-color:' + wb.bg + ';color:' + wb.bg + '" onclick="goToJob(' + wb.ji + ')">&#9873; ' + escHtml(wb.name) + '</div>';
-    }
-    html += '</div></div>';
-  }
-  html += '</div>';
-  document.getElementById('content').innerHTML = html;
+var ws = monday(VD);
+var we = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate()+4);
+var wsd = ws.toLocaleDateString(‘en-NZ’,{day:‘numeric’,month:‘short’});
+var wed2 = we.toLocaleDateString(‘en-NZ’,{day:‘numeric’,month:‘short’,year:‘numeric’});
+document.getElementById(‘caltitle’).textContent = wsd + ’ - ’ + wed2;
+var map = bmap();
+var todayk = dk(new Date());
+var dnames = [‘Mon’,‘Tue’,‘Wed’,‘Thu’,‘Fri’];
+var wdates = [], wkeys = [], wi;
+for (wi = 0; wi < 5; wi++) {
+var wd = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate()+wi);
+wdates.push(wd); wkeys.push(dk(wd));
+}
+var jdi = {}, jistr, di2, blks, bi, bk, ci, cols, consec;
+for (di2 = 0; di2 < 5; di2++) {
+blks = map[wkeys[di2]] || [];
+for (bi = 0; bi < blks.length; bi++) {
+bk = blks[bi];
+if (bk.dl) continue;
+jistr = ‘’+bk.i;
+if (!jdi[jistr]) jdi[jistr] = [];
+jdi[jistr].push(di2);
+}
+}
+var spanning = {}, jkeys = [], jki, jk;
+for (jk in jdi) { if (jdi.hasOwnProperty(jk)) jkeys.push(jk); }
+for (jki = 0; jki < jkeys.length; jki++) {
+jistr = jkeys[jki];
+cols = jdi[jistr].slice().sort(function(a,b){return a-b;});
+if (cols.length < 2) continue;
+consec = true;
+for (ci = 1; ci < cols.length; ci++) { if (cols[ci] !== cols[ci-1]+1) { consec=false; break; } }
+if (consec) spanning[jistr] = cols;
+}
+var h = ‘’;
+var sk, skeys = [], ski2;
+for (sk in spanning) { if (spanning.hasOwnProperty(sk)) skeys.push(sk); }
+for (ski2 = 0; ski2 < skeys.length; ski2++) {
+jistr = skeys[ski2];
+var ji2 = parseInt(jistr);
+var sc = spanning[jistr];
+var sjob = JOBS[ji2];
+var scol = jcol(sjob);
+var stc = sc[0], spn = sc.length, spi;
+h += ‘<div class="srow">’;
+for (spi = 0; spi < stc; spi++) h += ‘<div></div>’;
+h += ‘<div style="grid-column:span '+spn+'"><div class="sblock" style="background:'+scol.bg+';color:'+scol.fg+';" onclick="goJob('+ji2+')">’;
+if (sjob.jobnum) h += ‘<div class="wbn">#’+H(sjob.jobnum)+’</div>’;
+h += ‘<div class="wbname">’+H(sjob.name)+’</div>’;
+if (sjob.department) h += ‘<div class="wbdept">’+H(sjob.department)+’</div>’;
+h += ‘</div></div>’;
+for (spi = stc+spn; spi < 5; spi++) h += ‘<div></div>’;
+h += ‘</div>’;
+}
+h += ‘<div class="wgrid">’;
+var wai, wb2, aw, jc2, sww, sdd, isT2, all2, work2, dls2;
+for (wi = 0; wi < 5; wi++) {
+var wdate = wdates[wi]; var wkey = wkeys[wi];
+isT2 = (wkey === todayk);
+all2 = map[wkey] || [];
+work2 = []; dls2 = []; aw = [];
+for (wai = 0; wai < all2.length; wai++) {
+wb2 = all2[wai];
+if (wb2.dl) dls2.push(wb2);
+else { aw.push(wb2); if (!spanning[’’+wb2.i]) work2.push(wb2); }
+}
+sww = {}; jc2 = 0;
+for (wai = 0; wai < aw.length; wai++) { if (!sww[aw[wai].i]) { sww[aw[wai].i]=1; jc2++; } }
+sww = {}; sdd = {};
+h += ‘<div class="wcol">’;
+h += ‘<div class="wch'+(isT2?' td':'')+'"><div class="wday">’+dnames[wi]+’</div><div class="wdate">’+wdate.getDate()+’</div></div>’;
+h += ‘<div class="wcb'+(isT2?' td':'')+(jc2>1?' ov':'')+ '">’;
+for (wai = 0; wai < work2.length; wai++) {
+wb2 = work2[wai];
+if (sww[wb2.i]) continue; sww[wb2.i]=1;
+h += ‘<div class="wb" style="background:'+wb2.bg+';color:'+wb2.fg+';" onclick="goJob('+wb2.i+')">’;
+if (wb2.num) h += ‘<div class="wbn">#’+H(wb2.num)+’</div>’;
+h += ‘<div class="wbname">’+H(wb2.name)+’</div>’;
+if (wb2.dept) h += ‘<div class="wbdept">’+H(wb2.dept)+’</div>’;
+h += ‘</div>’;
+}
+if (jc2 > 1) h += ‘<div class="wovw">⚠ ‘+jc2+’ jobs</div>’;
+for (wai = 0; wai < dls2.length; wai++) {
+wb2 = dls2[wai];
+if (sdd[wb2.i]) continue; sdd[wb2.i]=1;
+h += ‘<div class="wbdl" style="border-color:'+wb2.bg+';color:'+wb2.bg+';" onclick="goJob('+wb2.i+')">⚑ ‘+H(wb2.name)+’</div>’;
+}
+h += ‘</div></div>’;
+}
+h += ‘</div>’;
+document.getElementById(‘content’).innerHTML = h;
 }
 
-function renderJobList() {
-  var el = document.getElementById('content');
-  if (!jobs.length) { el.innerHTML = '<div class="empty">No jobs yet.<br>Tap + Add Job to get started.</div>'; return; }
-  var sorted = [], ji;
-  for (ji = 0; ji < jobs.length; ji++) sorted.push({ job: jobs[ji], idx: ji });
-  sorted.sort(function(a, b) {
-    if (!a.job.deadline) return 1; if (!b.job.deadline) return -1;
-    return a.job.deadline.localeCompare(b.job.deadline);
-  });
-  var html = '';
-  var si2, entry, job, i, col, dlStatus, sched, startDate, jobStatus, statusLabel;
-  for (si2 = 0; si2 < sorted.length; si2++) {
-    entry = sorted[si2]; job = entry.job; i = entry.idx;
-    col = getJobColor(job);
-    dlStatus = job.deadline ? getDeadlineStatus(job.deadline) : null;
-    sched = getJobDays(job);
-    startDate = sched.length ? sched[sched.length - 1].toLocaleDateString('en-NZ', { day: 'numeric', month: 'short' }) : '-';
-    jobStatus = job.status || 'notstarted';
-    statusLabel = jobStatus === 'complete' ? 'Complete' : jobStatus === 'inprogress' ? 'In Progress' : 'Not Started';
-    html += '<div class="job-card" id="jcard-' + i + '" style="border-left-color:' + col.bg + '">';
-    html += '<div id="jview-' + i + '">';
-    html += '<div class="job-status-badge" style="background:' + col.bg + ';color:' + col.fg + '">' + statusLabel + '</div>';
-    if (job.jobnum) html += '<div class="job-num">#' + escHtml(job.jobnum) + '</div>';
-    html += '<div class="job-name">' + escHtml(job.name) + '</div>';
-    if (job.department) html += '<div class="job-dept">' + escHtml(job.department) + '</div>';
-    if (job.notes) html += '<div class="job-notes">' + escHtml(job.notes) + '</div>';
-    html += '<div class="job-meta">';
-    if (job.days) html += '<span class="badge">' + job.days + 'd</span>';
-    if (sched.length) html += '<span class="badge">starts ' + startDate + '</span>';
-    if (dlStatus) html += '<span class="badge ' + dlStatus.cls + '">' + dlStatus.label + '</span>';
-    html += '</div>';
-    html += '<div class="job-due">Due: ' + (job.deadline ? formatDate(job.deadline) : '-') + '</div>';
-    html += '<div class="job-btns"><button class="jbtn jbtn-edit" onclick="startEdit(' + i + ')">Edit</button><button class="jbtn jbtn-del" onclick="deleteJob(' + i + ')">Delete</button></div>';
-    html += '</div>';
-    html += '<div class="edit-panel" id="epanel-' + i + '">';
-    html += '<div class="edit-heading">Editing: ' + escHtml(job.name) + '</div>';
-    html += '<div class="field-grp"><div class="field-lbl">Job Number</div><input type="text" id="enum-' + i + '" value="' + escHtml(job.jobnum || '') + '" placeholder="e.g. 2026-042" /></div>';
-    html += '<div class="field-grp"><div class="field-lbl">Job Name</div><input type="text" id="ename-' + i + '" value="' + escHtml(job.name || '') + '" placeholder="Job name" /></div>';
-    html += '<div class="field-grp"><div class="field-lbl">Department</div><input type="text" id="edept-' + i + '" value="' + escHtml(job.department || '') + '" placeholder="Department" /></div>';
-    html += '<div class="field-row2"><div><div class="field-lbl">Deadline</div><input type="date" id="edl-' + i + '" value="' + (job.deadline || '') + '" /></div><div><div class="field-lbl">Days needed</div><input type="number" id="edays-' + i + '" value="' + (job.days || '') + '" min="0.5" step="0.5" /></div></div>';
-    html += '<div class="field-grp"><div class="field-lbl">Notes</div><textarea id="enotes-' + i + '" placeholder="Any notes...">' + escHtml(job.notes || '') + '</textarea></div>';
-
-```
-html += '<div class="field-lbl" style="margin-bottom:8px">Status</div>';
-html += '<div class="status-radios">';
-html += '<label class="status-radio"><input type="radio" name="st-' + i + '" value="notstarted"' + (jobStatus === 'notstarted' ? ' checked' : '') + ' /><div class="s-dot" style="background:#5b8dee"></div>Not Started</label>';
-html += '<label class="status-radio"><input type="radio" name="st-' + i + '" value="inprogress"' + (jobStatus === 'inprogress' ? ' checked' : '') + ' /><div class="s-dot" style="background:#5bce8a"></div>In Progress</label>';
-html += '<label class="status-radio"><input type="radio" name="st-' + i + '" value="complete"' + (jobStatus === 'complete' ? ' checked' : '') + ' /><div class="s-dot" style="background:#f0f0f8;border:1px solid #666"></div>Complete</label>';
-html += '</div>';
-html += '<div class="edit-btns"><button class="edit-save" onclick="saveEdit(' + i + ')">Save</button><button class="edit-cancel" onclick="cancelEdit(' + i + ')">Cancel</button></div>';
-html += '</div></div>';
-```
-
+function renderJobs() {
+var el = document.getElementById(‘content’);
+if (!JOBS.length) { el.innerHTML=’<div class="empty">No jobs yet.<br>Tap + Add Job to get started.</div>’; return; }
+var sorted = [], i;
+for (i = 0; i < JOBS.length; i++) sorted.push({job:JOBS[i], idx:i});
+sorted.sort(function(a,b) {
+if (!a.job.deadline) return 1; if (!b.job.deadline) return -1;
+return a.job.deadline < b.job.deadline ? -1 : a.job.deadline > b.job.deadline ? 1 : 0;
+});
+var h = ‘’, si, entry, job, ix, col, dls2, sd, start, jst, slbl;
+for (si = 0; si < sorted.length; si++) {
+entry = sorted[si]; job = entry.job; ix = entry.idx;
+col = jcol(job);
+dls2 = job.deadline ? dlst(job.deadline) : null;
+sd = jdays(job);
+start = sd.length ? sd[sd.length-1].toLocaleDateString(‘en-NZ’,{day:‘numeric’,month:‘short’}) : ‘-’;
+jst = job.status || ‘notstarted’;
+slbl = jst===‘complete’?‘Complete’:jst===‘inprogress’?‘In Progress’:‘Not Started’;
+h += ‘<div class="jcard" id="jc'+ix+'" style="border-left-color:'+col.bg+'">’;
+h += ‘<div id="jv'+ix+'">’;
+h += ‘<div class="jsbadge" style="background:'+col.bg+';color:'+col.fg+'">’+slbl+’</div>’;
+if (job.jobnum) h += ‘<div class="jnum">#’+H(job.jobnum)+’</div>’;
+h += ‘<div class="jname">’+H(job.name)+’</div>’;
+if (job.department) h += ‘<div class="jdept">’+H(job.department)+’</div>’;
+if (job.notes) h += ‘<div class="jnotes">’+H(job.notes)+’</div>’;
+h += ‘<div class="jmeta">’;
+if (job.days) h += ‘<span class="badge">’+job.days+‘d</span>’;
+if (sd.length) h += ‘<span class="badge">starts ‘+start+’</span>’;
+if (dls2) h += ‘<span class="badge '+dls2.cls+'">’+dls2.label+’</span>’;
+h += ‘</div>’;
+h += ‘<div class="jdue">Due: ‘+(job.deadline?fdate(job.deadline):’-’)+’</div>’;
+h += ‘<div class="jbtns"><button class="jbtn jbedit" onclick="startEdit('+ix+')">Edit</button><button class="jbtn jbdel" onclick="delJob('+ix+')">Delete</button></div>’;
+h += ‘</div>’;
+h += ‘<div class="epanel" id="ep'+ix+'">’;
+h += ‘<div class="ehead">Editing: ‘+H(job.name)+’</div>’;
+h += ‘<div class="fgrp"><div class="flbl">Job Number</div><input type="text" id="en'+ix+'" value="'+H(job.jobnum||'')+'" placeholder="e.g. 2026-042"/></div>’;
+h += ‘<div class="fgrp"><div class="flbl">Job Name</div><input type="text" id="ename'+ix+'" value="'+H(job.name||'')+'" placeholder="Job name"/></div>’;
+h += ‘<div class="fgrp"><div class="flbl">Department</div><input type="text" id="edept'+ix+'" value="'+H(job.department||'')+'" placeholder="Department"/></div>’;
+h += ‘<div class="fr2"><div><div class="flbl">Deadline</div><input type="date" id="edl'+ix+'" value="'+(job.deadline||'')+'"/></div><div><div class="flbl">Days needed</div><input type="number" id="edays'+ix+'" value="'+(job.days||'')+'" min="0.5" step="0.5"/></div></div>’;
+h += ‘<div class="fgrp"><div class="flbl">Notes</div><textarea id="enotes'+ix+'" placeholder="Any notes...">’+H(job.notes||’’)+’</textarea></div>’;
+h += ‘<div class="flbl" style="margin-bottom:8px">Status</div>’;
+h += ‘<div class="sradios">’;
+h += ‘<label class="sradio"><input type=“radio” name=“sr’+ix+’” value=“notstarted”’+(jst===‘notstarted’?’ checked’:’’)+’/><div class="sdot" style="background:#5b8dee"></div>Not Started</label>’;
+h += ‘<label class="sradio"><input type=“radio” name=“sr’+ix+’” value=“inprogress”’+(jst===‘inprogress’?’ checked’:’’)+’/><div class="sdot" style="background:#5bce8a"></div>In Progress</label>’;
+h += ‘<label class="sradio"><input type=“radio” name=“sr’+ix+’” value=“complete”’+(jst===‘complete’?’ checked’:’’)+’/><div class="sdot" style="background:#f0f0f8;border:1px solid #666"></div>Complete</label>’;
+h += ‘</div>’;
+h += ‘<div class="ebtns"><button class="esave" onclick="saveEdit('+ix+')">Save</button><button class="ecancel" onclick="cancelEdit('+ix+')">Cancel</button></div>’;
+h += ‘</div></div>’;
 }
-el.innerHTML = html;
+el.innerHTML = h;
 }
 
 function addJob() {
-var name = document.getElementById(‘f-name’).value.trim();
-var dept = document.getElementById(‘f-dept’).value.trim();
-var jobnum = document.getElementById(‘f-jobnum’).value.trim();
-var deadline = document.getElementById(‘f-deadline’).value;
-var days = parseFloat(document.getElementById(‘f-days’).value);
-var notes = document.getElementById(‘f-notes’).value.trim();
+var name = document.getElementById(‘fname’).value.trim();
+var dept = document.getElementById(‘fdept’).value.trim();
+var num = document.getElementById(‘fn’).value.trim();
+var dl = document.getElementById(‘fdl’).value;
+var days = parseFloat(document.getElementById(‘fdays’).value);
+var notes = document.getElementById(‘fnotes’).value.trim();
 if (!name) { alert(‘Please enter a job name.’); return; }
-if (!deadline) { alert(‘Please set a deadline.’); return; }
+if (!dl) { alert(‘Please set a deadline.’); return; }
 if (!days || days <= 0) { alert(‘Please enter number of days needed.’); return; }
-jobs.push({ name: name, department: dept, jobnum: jobnum, deadline: deadline, days: days, notes: notes, status: ‘notstarted’, created: new Date().toISOString() });
+JOBS.push({name:name, department:dept, jobnum:num, deadline:dl, days:days, notes:notes, status:‘notstarted’});
 save();
-var fields = [‘f-name’, ‘f-dept’, ‘f-jobnum’, ‘f-deadline’, ‘f-days’, ‘f-notes’];
-var fi;
-for (fi = 0; fi < fields.length; fi++) document.getElementById(fields[fi]).value = ‘’;
+document.getElementById(‘fn’).value=’’;
+document.getElementById(‘fname’).value=’’;
+document.getElementById(‘fdept’).value=’’;
+document.getElementById(‘fdl’).value=’’;
+document.getElementById(‘fdays’).value=’’;
+document.getElementById(‘fnotes’).value=’’;
 closeModal();
 setTab(‘jobs’);
 }
 
-function deleteJob(i) {
-if (!confirm(‘Delete “’ + jobs[i].name + ‘”?’)) return;
-jobs.splice(i, 1); save(); render();
+function delJob(i) {
+if (!confirm(‘Delete “’+JOBS[i].name+’”?’)) return;
+JOBS.splice(i,1); save(); render();
 }
 
 function startEdit(i) {
-document.getElementById(‘jview-’ + i).style.display = ‘none’;
-document.getElementById(‘epanel-’ + i).style.display = ‘block’;
+document.getElementById(‘jv’+i).style.display=‘none’;
+document.getElementById(‘ep’+i).style.display=‘block’;
 }
 
 function cancelEdit(i) {
-document.getElementById(‘jview-’ + i).style.display = ‘block’;
-document.getElementById(‘epanel-’ + i).style.display = ‘none’;
+document.getElementById(‘jv’+i).style.display=‘block’;
+document.getElementById(‘ep’+i).style.display=‘none’;
 }
 
 function saveEdit(i) {
-var name = document.getElementById(‘ename-’ + i).value.trim();
-var dept = document.getElementById(‘edept-’ + i).value.trim();
-var dl = document.getElementById(‘edl-’ + i).value;
-var d = parseFloat(document.getElementById(‘edays-’ + i).value);
-var num = document.getElementById(‘enum-’ + i).value.trim();
-var notes = document.getElementById(‘enotes-’ + i).value.trim();
-var stEl = document.querySelector(‘input[name=“st-’ + i + ‘”]:checked’);
-var status = stEl ? stEl.value : (jobs[i].status || ‘notstarted’);
-if (name) jobs[i].name = name;
-jobs[i].department = dept;
-if (dl) jobs[i].deadline = dl;
-if (d > 0) jobs[i].days = d;
-jobs[i].jobnum = num;
-jobs[i].notes = notes;
-jobs[i].status = status;
+var name = document.getElementById(‘ename’+i).value.trim();
+var dept = document.getElementById(‘edept’+i).value.trim();
+var dl = document.getElementById(‘edl’+i).value;
+var days = parseFloat(document.getElementById(‘edays’+i).value);
+var num = document.getElementById(‘en’+i).value.trim();
+var notes = document.getElementById(‘enotes’+i).value.trim();
+var stEl = document.querySelector(‘input[name=“sr’+i+’”]:checked’);
+var status = stEl ? stEl.value : (JOBS[i].status||‘notstarted’);
+if (name) JOBS[i].name = name;
+JOBS[i].department = dept;
+if (dl) JOBS[i].deadline = dl;
+if (days > 0) JOBS[i].days = days;
+JOBS[i].jobnum = num;
+JOBS[i].notes = notes;
+JOBS[i].status = status;
 save(); render();
 }
 
-function openModal() { document.getElementById(‘modal’).classList.add(‘show’); }
-function closeModal() { document.getElementById(‘modal’).classList.remove(‘show’); }
-function closeModalOutside(e) { if (e.target === document.getElementById(‘modal’)) closeModal(); }
+function openModal() { document.getElementById(‘modal’).className=‘moverlay show’; }
+function closeModal() { document.getElementById(‘modal’).className=‘moverlay’; }
+function closeModalBg(e) { if (e.target===document.getElementById(‘modal’)) closeModal(); }
 
 function setTab(t) {
-currentTab = t;
-var tabEls = document.querySelectorAll(’.tab’);
-var tabNames = [‘week’, ‘month’, ‘jobs’];
-var ti;
-for (ti = 0; ti < tabEls.length; ti++) tabEls[ti].classList.toggle(‘active’, tabNames[ti] === t);
+TAB = t;
+var tabs = document.querySelectorAll(’.tab’);
+var names = [‘week’,‘month’,‘jobs’];
+var i;
+for (i = 0; i < tabs.length; i++) {
+if (names[i]===t) tabs[i].className=‘tab active’;
+else tabs[i].className=‘tab’;
+}
 render();
 }
 
-function prev() {
-if (currentTab === ‘week’) viewDate.setDate(viewDate.getDate() - 7);
-else viewDate.setMonth(viewDate.getMonth() - 1);
-render();
-}
+function prev() { if(TAB===‘week’) VD.setDate(VD.getDate()-7); else VD.setMonth(VD.getMonth()-1); render(); }
+function next() { if(TAB===‘week’) VD.setDate(VD.getDate()+7); else VD.setMonth(VD.getMonth()+1); render(); }
+function goToday() { VD=new Date(); render(); }
 
-function next() {
-if (currentTab === ‘week’) viewDate.setDate(viewDate.getDate() + 7);
-else viewDate.setMonth(viewDate.getMonth() + 1);
-render();
-}
-
-function goToday() { viewDate = new Date(); render(); }
-
-function goToJob(ji) {
+function goJob(i) {
 setTab(‘jobs’);
 setTimeout(function() {
-var card = document.getElementById(‘jcard-’ + ji);
-if (card) {
-card.scrollIntoView({ behavior: ‘smooth’, block: ‘start’ });
-card.style.outline = ‘3px solid #7aaaff’;
-setTimeout(function() { card.style.outline = ‘’; }, 1500);
-}
+var c = document.getElementById(‘jc’+i);
+if (c) { c.scrollIntoView({behavior:‘smooth’,block:‘start’}); c.style.outline=‘3px solid #7aaaff’; setTimeout(function(){c.style.outline=’’;},1500); }
 }, 60);
 }
 
